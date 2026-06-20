@@ -1,0 +1,2350 @@
+<!DOCTYPE html><html class="dark" lang="tr" style=""><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>TahminLigim Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+                "surface-bright": "#393939",
+                "surface-variant": "#353535",
+                "on-primary-container": "#00285c",
+                "on-primary": "#002e69",
+                "background": "#131313",
+                "on-tertiary": "#571e00",
+                "on-secondary-fixed": "#002107",
+                "inverse-surface": "#e2e2e2",
+                "on-tertiary-fixed-variant": "#7c2e00",
+                "on-error-container": "#ffdad6",
+                "on-secondary-container": "#003a11",
+                "tertiary-fixed-dim": "#ffb595",
+                "primary-fixed-dim": "#adc6ff",
+                "on-primary-fixed-variant": "#004493",
+                "error": "#ffb4ab",
+                "tertiary-container": "#ef6719",
+                "surface": "#131313",
+                "surface-container-highest": "#353535",
+                "inverse-on-surface": "#303030",
+                "secondary-fixed": "#72fe88",
+                "on-secondary-fixed-variant": "#00531c",
+                "tertiary-fixed": "#ffdbcc",
+                "error-container": "#93000a",
+                "secondary-container": "#05b046",
+                "on-surface": "#e2e2e2",
+                "surface-container-lowest": "#0e0e0e",
+                "primary-fixed": "#d8e2ff",
+                "on-surface-variant": "#c1c6d7",
+                "on-background": "#e2e2e2",
+                "surface-tint": "#adc6ff",
+                "inverse-primary": "#005bc1",
+                "primary-container": "#4b8eff",
+                "outline": "#8b90a0",
+                "surface-dim": "#131313",
+                "secondary": "#53e16f",
+                "on-tertiary-container": "#4c1a00",
+                "on-error": "#690005",
+                "tertiary": "#ffb595",
+                "on-primary-fixed": "#001a41",
+                "surface-container-high": "#2a2a2a",
+                "secondary-fixed-dim": "#53e16f",
+                "outline-variant": "#414755",
+                "primary": "#adc6ff",
+                "on-tertiary-fixed": "#351000",
+                "on-secondary": "#003911",
+                "surface-container": "#1f1f1f",
+                "surface-container-low": "#1b1b1b"
+        },
+        "borderRadius": {
+                "DEFAULT": "1rem",
+                "lg": "2rem",
+                "xl": "3rem",
+                "full": "9999px"
+        },
+        "spacing": {
+                "margin-mobile": "16px",
+                "nav-width": "80px",
+                "unit": "4px",
+                "margin-desktop": "64px",
+                "gutter": "24px"
+        },
+        "fontFamily": {
+                sans: ["Plus Jakarta Sans", "sans-serif"],
+                display: ["Outfit", "sans-serif"],
+                "display-lg": [
+                        "Outfit", "sans-serif"
+                ],
+                "label-sm": [
+                        "Plus Jakarta Sans", "sans-serif"
+                ],
+                "body-md": [
+                        "Plus Jakarta Sans", "sans-serif"
+                ],
+                "headline-lg": [
+                        "Outfit", "sans-serif"
+                ],
+                "headline-lg-mobile": [
+                        "Outfit", "sans-serif"
+                ]
+        },
+        "fontSize": {
+                "display-lg": [
+                        "48px",
+                        {
+                                "lineHeight": "56px",
+                                "letterSpacing": "-0.03em",
+                                "fontWeight": "800"
+                        }
+                ],
+                "label-sm": [
+                        "12px",
+                        {
+                                "lineHeight": "16px",
+                                "letterSpacing": "0.01em",
+                                "fontWeight": "600"
+                        }
+                ],
+                "body-md": [
+                        "16px",
+                        {
+                                "lineHeight": "24px",
+                                "letterSpacing": "0em",
+                                "fontWeight": "400"
+                        }
+                ],
+                "headline-lg": [
+                        "32px",
+                        {
+                                "lineHeight": "40px",
+                                "letterSpacing": "-0.02em",
+                                "fontWeight": "700"
+                        }
+                ],
+                "headline-lg-mobile": [
+                        "24px",
+                        {
+                                "lineHeight": "32px",
+                                "letterSpacing": "-0.02em",
+                                "fontWeight": "700"
+                        }
+                ]
+        }
+      },
+    },
+  }
+</script>
+<style>
+  /* Fade in body only after styles and DOM are fully loaded to prevent FOUC */
+  body {
+      opacity: 0;
+      transition: opacity 0.25s ease-in-out;
+  }
+
+  /* Prevent Flash of Unstyled Content (FOUC) before Tailwind CSS loads */
+  .hidden {
+      display: none;
+  }
+  
+  /* Apply display font to all headings globally for an elite, premium look */
+  h1, h2, h3, h4, h5, h6 {
+      font-family: 'Outfit', sans-serif !important;
+  }
+  
+  /* Custom scrollbars for a premium dark spatial style */
+  ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+      background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.12);
+      border-radius: 9999px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+      background: rgba(255, 255, 255, 0.25);
+  }
+
+  .glass-texture {
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
+  }
+</style>
+<noscript>
+  <style>
+    body { opacity: 1 !important; }
+  </style>
+</noscript>
+</head>
+<body class="text-on-background font-body-md min-h-screen antialiased flex selection:bg-primary/30 selection:text-primary-fixed glass-texture" style="background: radial-gradient(circle at 50% 0%, #1a2a22 0%, #0d120f 40%, #050a07 100%);">
+<!-- Top App Bar -->
+<header class="fixed top-0 left-0 right-0 flex justify-between items-center px-margin-mobile md:px-margin-desktop py-gutter bg-transparent z-40 transition-opacity duration-300" id="top-app-bar"><div class="flex justify-between items-center w-full md:ml-[104px]"><div class="flex items-center pl-3 md:pl-5"><img src="logo.png" alt="TahminLigim" class="h-[26px] md:h-8 w-auto object-contain"></div><div class="flex items-center gap-6"><button aria-label="Notifications" class="text-on-surface hover:text-white transition-colors focus:outline-none"><span class="material-symbols-outlined" style="font-size: 28px;">notifications</span></button>
+<div class="relative">
+  <button id="btn-profile-menu" onclick="window.toggleProfileMenu()" aria-label="Profile" class="text-on-surface hover:text-white transition-colors focus:outline-none flex items-center gap-2">
+    <div id="header-profile-avatar-container" class="flex items-center justify-center">
+      <span class="material-symbols-outlined" style="font-size: 28px;">account_circle</span>
+    </div>
+  </button>
+  <div id="profile-dropdown" class="absolute right-0 mt-2 w-48 bg-surface-container border border-white/10 rounded-xl shadow-2xl glass-texture overflow-hidden opacity-0 invisible transition-all duration-200 origin-top-right">
+    <div class="p-3 border-b border-white/10">
+      <p class="text-[10px] text-on-surface-variant uppercase font-bold tracking-wider mb-0.5">Hesabım</p>
+      <p id="profile-menu-username" class="text-sm font-bold text-white truncate">Misafir</p>
+    </div>
+    <div class="p-2 flex flex-col gap-1">
+      <button onclick="document.getElementById('nav-settings').click()" class="w-full text-left px-3 py-2 text-xs font-semibold text-white hover:bg-white/10 rounded-lg transition-colors flex items-center gap-2">
+        <span class="material-symbols-outlined text-[16px]">settings</span> Ayarlar
+      </button>
+      <button onclick="window.handleLogout && window.handleLogout()" class="w-full text-left px-3 py-2 text-xs font-semibold text-red-400 hover:bg-red-500/10 rounded-lg transition-colors flex items-center gap-2">
+        <span class="material-symbols-outlined text-[16px]">logout</span> Çıkış Yap
+      </button>
+    </div>
+  </div>
+</div>
+</div></div></header>
+<!-- Side Navigation Capsule (Desktop Only) -->
+<nav class="hidden md:flex fixed left-6 top-1/2 -translate-y-1/2 h-auto py-8 w-nav-width rounded-full shadow-2xl flex-col items-center gap-8 z-50 backdrop-blur-[64px] bg-white/5 border border-white/10 border-t-white/20 border-l-white/20 max-h-[90vh] overflow-y-auto">
+<!-- Active Tab: Home -->
+<a id="nav-home" data-tab="home" aria-current="page" aria-label="Home" class="nav-btn flex flex-col items-center justify-center gap-1.5 w-full py-2 transition-all duration-200 relative" href="javascript:void(0)">
+<div class="icon-container flex items-center justify-center w-14 h-14 rounded-full text-white bg-white/10 shadow-[0_0_15px_rgba(255,255,255,0.1),inset_0_1px_1px_rgba(255,255,255,0.3)] border border-white/20 transition-all duration-200">
+<span class="material-symbols-outlined icon-span" style="font-size: 28px; font-variation-settings: &quot;FILL&quot; 1;">sports_soccer</span>
+</div>
+<span class="font-label-sm label-span text-[10px] text-white transition-colors font-bold">Ana Sayfa</span>
+</a>
+<!-- Inactive Tabs -->
+<a id="nav-matches" data-tab="matches" aria-label="Matches" class="nav-btn flex flex-col items-center justify-center gap-1.5 w-full py-2 transition-all duration-300 group" href="javascript:void(0)">
+<div class="icon-container flex items-center justify-center w-14 h-14 rounded-full text-on-surface-variant bg-transparent border border-transparent group-hover:bg-white/5 group-hover:text-white transition-all duration-300">
+<span class="material-symbols-outlined icon-span" style="font-size: 28px;">calendar_month</span>
+</div>
+<span class="font-label-sm label-span text-[10px] text-on-surface-variant group-hover:text-white transition-colors">Maçlar</span>
+</a>
+<a id="nav-forum" data-tab="forum" aria-label="Forum" class="nav-btn flex flex-col items-center justify-center gap-1.5 w-full py-2 transition-all duration-300 group" href="javascript:void(0)">
+<div class="icon-container flex items-center justify-center w-14 h-14 rounded-full text-on-surface-variant bg-transparent border border-transparent group-hover:bg-white/5 group-hover:text-white transition-all duration-300">
+<span class="material-symbols-outlined icon-span" style="font-size: 28px;">forum</span>
+</div>
+<span class="font-label-sm label-span text-[10px] text-on-surface-variant group-hover:text-white transition-colors">Forum</span>
+</a><a id="nav-leagues" data-tab="leagues" aria-label="Leagues" class="nav-btn flex flex-col items-center justify-center gap-1.5 w-full py-2 transition-all duration-300 group" href="javascript:void(0)">
+<div class="icon-container flex items-center justify-center w-14 h-14 rounded-full text-on-surface-variant bg-transparent border border-transparent group-hover:bg-white/5 group-hover:text-white transition-all duration-300">
+<span class="material-symbols-outlined icon-span" style="font-size: 28px;">trophy</span>
+</div>
+<span class="font-label-sm label-span text-[10px] text-on-surface-variant group-hover:text-white transition-colors">Ligim</span>
+</a>
+<div class="flex-grow min-h-[40px]"></div>
+<a id="nav-settings" data-tab="settings" aria-label="Settings" class="nav-btn flex flex-col items-center justify-center gap-1.5 w-full py-2 transition-all duration-300 group" href="javascript:void(0)">
+<div class="icon-container flex items-center justify-center w-14 h-14 rounded-full text-on-surface-variant bg-transparent border border-transparent group-hover:bg-white/5 group-hover:text-white transition-all duration-300">
+<span class="material-symbols-outlined icon-span" style="font-size: 28px;">settings</span>
+</div>
+<span class="font-label-sm label-span text-[10px] text-on-surface-variant group-hover:text-white transition-colors">Ayarlar</span>
+</a>
+</nav>
+<!-- Main Content Canvas -->
+<main class="flex-1 ml-0 md:ml-[calc(24px+80px+24px)] mt-[72px] md:mt-[76px] px-margin-mobile md:px-margin-desktop pb-4 md:pb-6 max-w-7xl relative z-10 md:ml-[140px] flex-grow">
+
+<!-- Tab: Home (Ana Sayfa) -->
+<div id="tab-home" class="tab-content block">
+<!-- Hero Section: Featured Match -->
+<section class="mb-6">
+<div id="featured-match-container" class="bg-white/5 backdrop-blur-[64px] border border-white/10 border-t-white/20 border-l-white/20 rounded-2xl p-6 relative overflow-hidden group shadow-2xl">
+    <div class="text-center py-8 text-on-surface-variant flex flex-col items-center gap-2">
+      <span class="material-symbols-outlined text-4xl text-on-surface-variant">sports_soccer</span>
+      <p class="text-sm font-semibold">Öne Çıkan Karşılaşma Bulunmuyor</p>
+      <p class="text-xs text-on-surface-variant/60">Yakın zamanda başlayacak maçlar burada listelenecektir.</p>
+    </div>
+</div>
+</section>
+<!-- Bento Grid: Active Predictions & Insights -->
+<section class="grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-6">
+<!-- Insight Card 1 -->
+<div class="bg-white/5 backdrop-blur-[64px] border border-white/10 border-t-white/20 border-l-white/20 rounded-2xl p-5 md:p-6 col-span-1 md:col-span-2 flex flex-col justify-between shadow-xl">
+<div class="flex justify-between items-start mb-4">
+<h3 class="text-base md:text-lg text-white flex items-center gap-2 font-semibold tracking-tight">
+<span class="material-symbols-outlined text-white">trending_up</span>
+                        Performans Metrikleri
+                    </h3>
+<span class="text-on-surface-variant text-xs font-medium">Son 5 Maç</span>
+</div>
+<div class="flex-grow flex items-center justify-center bg-black/20 rounded-lg border border-white/10 p-4 min-h-[140px] md:min-h-[160px]">
+<p class="text-on-surface-variant text-xs italic">Grafik görselleştirmesi burada yer alacak.</p>
+</div>
+</div>
+<!-- Active Prediction Card -->
+<div id="popular-predictions-container" class="bg-white/5 backdrop-blur-[64px] border border-white/10 border-t-white/20 border-l-white/20 rounded-2xl p-5 md:p-6 flex flex-col justify-between gap-4 shadow-xl">
+  <h3 class="text-base md:text-lg text-white font-semibold tracking-tight">Popüler Tahminler</h3>
+  <div class="text-center py-6 text-xs text-on-surface-variant/60 italic">Henüz popüler tahmin bulunmuyor.</div>
+</div>
+<!-- Stats Mini Cards -->
+<div class="bg-white/5 backdrop-blur-[64px] border border-white/10 border-t-white/20 border-l-white/20 rounded-2xl p-5 md:p-6 flex flex-col items-center justify-center text-center gap-2 shadow-xl">
+<span class="material-symbols-outlined text-3xl text-white">military_tech</span>
+<span id="user-accuracy" class="text-3xl md:text-4xl font-bold text-white">%0</span>
+<span class="text-on-surface-variant text-xs font-medium">İsabet Oranı</span>
+</div>
+<div class="bg-white/5 backdrop-blur-[64px] border border-white/10 border-t-white/20 border-l-white/20 rounded-2xl p-5 md:p-6 flex flex-col items-center justify-center text-center gap-2 shadow-xl">
+<span class="material-symbols-outlined text-3xl text-white">hotel_class</span>
+<span id="user-points" class="text-3xl md:text-4xl font-bold text-white">0</span>
+<span class="text-on-surface-variant text-xs font-medium">Aylık Başarı Puanı</span>
+</div>
+<div onclick="document.getElementById('nav-leagues').click()" class="bg-white/5 backdrop-blur-[64px] border border-white/10 border-t-white/20 border-l-white/20 rounded-2xl p-5 md:p-6 flex items-center justify-between group cursor-pointer hover:bg-white/10 transition-all shadow-xl">
+<div class="flex flex-col gap-1">
+<span class="text-base font-medium text-white">Lig Sıralamasını Gör</span>
+<span class="text-xs text-on-surface-variant">Liderlik tablosunu incele</span>
+</div>
+<div class="w-10 h-10 rounded-full bg-white/10 border border-white/10 flex items-center justify-center group-hover:bg-white/20 text-white transition-colors backdrop-blur-sm">
+<span class="material-symbols-outlined text-lg">arrow_forward</span>
+</div>
+</div>
+</section>
+</div>
+
+<!-- Tab: Matches (Maçlar) -->
+<div id="tab-matches" class="tab-content hidden">
+  <!-- Matches Container Layout: Header and Search -->
+  <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+    <div>
+      <h2 class="text-2xl md:text-3xl font-bold text-white tracking-tight">Maç Takvimi</h2>
+      <p class="text-xs md:text-sm text-on-surface-variant mt-1">Yaklaşan fikstürler ve analiz edilebilir karşılaşmalar.</p>
+    </div>
+    <div class="relative w-full sm:w-72">
+      <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-lg">search</span>
+      <input type="text" id="match-search-input" placeholder="Takım veya lig ara..." oninput="window.filterMatches()" class="w-full bg-white/5 border border-white/10 rounded-full py-2 pl-10 pr-4 text-xs font-semibold text-white focus:outline-none focus:border-secondary placeholder:text-on-surface-variant/40 transition-all">
+    </div>
+  </div>
+
+  <!-- Main Split Layout: Calendar (Left) & Popüler Sidebar (Right) -->
+  <div class="flex flex-col lg:flex-row gap-gutter">
+    <!-- Left Column: Calendar Days & Match Lists -->
+    <div class="flex-grow lg:w-2/3 flex flex-col gap-4">
+      <!-- Days Row -->
+      <div class="flex gap-2 pb-2 overflow-x-auto whitespace-nowrap scrollbar-none border-b border-white/5 mb-2">
+        <button id="btn-day-yesterday" onclick="window.switchMatchDay('yesterday')" class="day-btn px-4 py-2 rounded-full text-xs font-semibold bg-white/5 border border-white/10 text-on-surface-variant hover:text-white transition-all">
+          Dün
+        </button>
+        <button id="btn-day-today" onclick="window.switchMatchDay('today')" class="day-btn px-4 py-2 rounded-full text-xs font-semibold bg-secondary/10 text-secondary border border-secondary/20 shadow-[0_0_15px_rgba(83,225,111,0.15)] transition-all">
+          Bugün, 20 Haz
+        </button>
+        <button id="btn-day-tomorrow" onclick="window.switchMatchDay('tomorrow')" class="day-btn px-4 py-2 rounded-full text-xs font-semibold bg-white/5 border border-white/10 text-on-surface-variant hover:text-white transition-all">
+          Yarın
+        </button>
+        <button id="btn-day-mon" onclick="window.switchMatchDay('mon')" class="day-btn px-4 py-2 rounded-full text-xs font-semibold bg-white/5 border border-white/10 text-on-surface-variant hover:text-white transition-all">
+          Pzt, 22 Haz
+        </button>
+        <button id="btn-day-tue" onclick="window.switchMatchDay('tue')" class="day-btn px-4 py-2 rounded-full text-xs font-semibold bg-white/5 border border-white/10 text-on-surface-variant hover:text-white transition-all">
+          Sal, 23 Haz
+        </button>
+        <div class="relative inline-block">
+          <button onclick="window.openCalendarPicker()" class="px-4 py-2 rounded-full text-xs font-semibold bg-white/5 border border-white/10 text-on-surface-variant hover:text-white transition-all flex items-center gap-1.5 cursor-pointer">
+            <span class="material-symbols-outlined text-sm">calendar_month</span> <span id="calendar-btn-text">Takvim</span>
+          </button>
+          <input type="date" id="calendar-date-picker" onchange="window.handleCalendarDateChange(this)" class="absolute inset-0 opacity-0 pointer-events-none w-full h-full">
+        </div>
+      </div>
+
+      <!-- MATCH CONTAINERS FOR DAYS -->
+      <div id="day-container-yesterday" class="day-container hidden flex flex-col gap-5"></div>
+      <div id="day-container-today" class="day-container flex flex-col gap-5"></div>
+      <div id="day-container-tomorrow" class="day-container hidden flex flex-col gap-5"></div>
+      <div id="day-container-mon" class="day-container hidden flex flex-col gap-5"></div>
+      <div id="day-container-tue" class="day-container hidden flex flex-col gap-5"></div>
+      <div id="day-container-calendar" class="day-container hidden flex flex-col gap-5"></div>
+      <!-- No Match Found Alert -->
+      <div id="no-matches-alert" class="hidden bg-white/5 border border-white/10 p-6 rounded-2xl text-center text-on-surface-variant mt-4">
+        <span class="material-symbols-outlined text-3xl text-on-surface-variant mb-2">event_busy</span>
+        <p class="text-sm font-semibold text-white">Yaklaşan maç bulunamadı.</p>
+      </div>
+
+    </div>
+
+    <!-- Right Column: Popüler Sidebar (Right) -->
+    <aside class="lg:w-[280px] shrink-0 flex flex-col gap-4">
+      <div class="bg-white/5 border border-white/10 rounded-2xl p-4 flex flex-col gap-3 shadow-xl relative overflow-hidden backdrop-blur-md">
+        <h3 class="text-sm font-bold text-white border-b border-white/10 pb-2 flex items-center gap-2">
+          <span class="material-symbols-outlined text-secondary text-lg">trending_up</span>
+          Popüler
+        </h3>
+        <div id="popular-sidebar-container" class="flex flex-col gap-2.5">
+          <div class="text-center py-4 text-xs text-on-surface-variant/60 italic">Aktif popüler maç bulunmuyor.</div>
+        </div>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<!-- Tab: Forum -->
+<div id="tab-forum" class="tab-content hidden">
+  <div class="mb-4 md:mb-6">
+    <h2 class="text-2xl md:text-3xl font-bold text-white tracking-tight mb-1">Maç Analizleri (Forum)</h2>
+    <p class="text-sm text-on-surface-variant">Maçlar için yaptığınız tahminlerin analizlerini yazın. Analizler maç tamamlandıktan sonra herkesin erişimine açılır.</p>
+  </div>
+
+  <div class="max-w-3xl mx-auto flex flex-col gap-6">
+    <!-- Comment Posting Card (Top) -->
+    <div id="forum-posting-container" class="bg-white/5 backdrop-blur-[64px] border border-white/10 border-t-white/20 border-l-white/20 rounded-2xl p-5 shadow-xl text-white flex flex-col gap-4">
+      <div class="flex items-center justify-between border-b border-white/10 pb-2">
+        <h3 class="text-sm font-bold text-white flex items-center gap-2">
+          <span class="material-symbols-outlined text-lg text-secondary">rate_review</span>
+          Tahmin Analizini Paylaş
+        </h3>
+        <span class="text-[10px] text-on-surface-variant font-medium">Sadece tahmin ettiğin maçlar listelenir</span>
+      </div>
+      
+      <div id="forum-form-fields" class="flex flex-col gap-4">
+        <div>
+          <label class="block text-[10px] uppercase font-bold text-on-surface-variant mb-1.5">Maç Seçimi (Tahmin Ettiğin Maçlar)</label>
+          <select id="forum-played-match-select" class="bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-xs font-semibold text-white focus:outline-none cursor-pointer backdrop-blur-sm w-full">
+            <option value="" disabled selected class="bg-[#131313] text-on-surface-variant">Tahmin ettiğiniz aktif maç bulunmuyor</option>
+          </select>
+        </div>
+        
+        <div>
+          <textarea id="forum-comment-textarea" rows="3" placeholder="Neden bu tahmini yaptın? Analizini yaz..." class="bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-xs font-semibold text-white focus:outline-none backdrop-blur-sm w-full resize-none placeholder:text-on-surface-variant/40"></textarea>
+        </div>
+        
+        <div class="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-3">
+          <span class="text-[10px] text-on-surface-variant flex items-center gap-1">
+            <span class="material-symbols-outlined text-xs">lock</span> Gönderdiğiniz analiz maç sonuna kadar kilitli kalır, maç bitince açılır.
+          </span>
+          <button onclick="submitUserComment()" id="forum-submit-comment-btn" class="px-5 py-2.5 rounded-xl bg-secondary hover:bg-secondary/90 text-black font-bold text-xs transition-colors flex items-center justify-center gap-1.5 shadow-lg shrink-0">
+            <span class="material-symbols-outlined text-sm font-bold">lock</span> Analizini Kilitle ve Gönder
+          </button>
+        </div>
+      </div>
+      
+      <!-- Success Message Container -->
+      <div id="forum-comment-success-message" class="hidden flex items-center gap-3 p-3 bg-secondary/10 border border-secondary/20 text-secondary rounded-xl justify-center text-center">
+        <span class="material-symbols-outlined text-lg">check_circle</span>
+        <span class="text-xs font-bold">Analiziniz kilitlendi ve kaydedildi. Maç tamamlandığında aşağıdaki akışta yayınlanacaktır.</span>
+      </div>
+    </div>
+    
+    <!-- Comments Feed (Below) -->
+    <div class="flex flex-col gap-4">
+      <h3 class="text-base md:text-lg font-bold text-white flex items-center gap-2 border-b border-white/10 pb-2">
+        <span class="material-symbols-outlined text-lg text-secondary">forum</span>
+        Yorumlar (Açılmış Analizler)
+      </h3>
+      
+      <div id="unlocked-comments-feed" class="flex flex-col gap-4">
+        <div class="bg-white/5 border border-white/10 p-6 rounded-2xl text-center text-on-surface-variant/60">
+          <span class="material-symbols-outlined text-3xl text-on-surface-variant mb-2">forum</span>
+          <p class="text-sm font-semibold">Henüz paylaşılan analiz bulunmuyor.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Tab: Leagues (Ligim) -->
+<div id="tab-leagues" class="tab-content hidden">
+  <div class="flex flex-col lg:flex-row gap-gutter">
+    <!-- Left Area: League Table -->
+    <section class="flex-grow flex flex-col gap-6">
+      <header class="mb-2">
+        <h2 class="text-2xl md:text-3xl font-bold text-white tracking-tight mb-2" id="league-name-heading">Aktif Lig Bulunmuyor</h2>
+        <p class="text-sm text-on-surface-variant" id="league-details-text">Lütfen yeni bir lig kurun veya davet koduyla mevcut bir lige katılın.</p>
+      </header>
+      
+      <!-- Main Glass Panel for Table -->
+      <div class="relative bg-surface/30 backdrop-blur-[40px] border border-white/20 rounded-xl overflow-hidden glass-texture shadow-2xl">
+        <!-- Header Row -->
+        <div class="grid grid-cols-12 gap-4 p-4 border-b border-white/10 font-label-sm text-xs text-on-surface-variant uppercase tracking-wider bg-black/20">
+          <div class="col-span-2 md:col-span-1 text-center">Sıra</div>
+          <div class="col-span-4">Kullanıcı</div>
+          <div class="col-span-2 text-right">Tahmin</div>
+          <div class="col-span-2 text-right">İsabet %</div>
+          <div class="col-span-2 text-right font-semibold">Puan</div>
+        </div>
+        <!-- Table Body -->
+        <div id="leaderboard-table-body" class="flex flex-col">
+          <div class="p-6 text-center text-on-surface-variant/60 text-xs italic">Sıralama verisi bulunmuyor.</div>
+        </div>
+        <!-- View All Row -->
+          <div class="p-3 text-center">
+            <button class="text-xs text-secondary hover:text-secondary-fixed transition-colors font-medium">Tüm Sıralamayı Gör</button>
+          </div>
+        </div>
+    </section>
+    
+    <!-- Right Area: Sidebar Panels -->
+    <aside class="lg:w-[280px] shrink-0 flex flex-col gap-4">
+      <!-- Best of the Week Card -->
+      <div class="bg-surface/30 backdrop-blur-[64px] border border-white/20 rounded-xl overflow-hidden glass-texture p-4 flex flex-col gap-3 shadow-xl">
+        <h3 class="text-sm font-bold text-on-surface border-b border-white/10 pb-2 flex items-center justify-between">
+          Haftanın En İyileri
+          <span class="material-symbols-outlined text-secondary text-lg">local_fire_department</span>
+        </h3>
+        <div id="weekly-best-container" class="flex flex-col gap-2">
+          <div class="text-center py-4 text-xs text-on-surface-variant/60 italic">Haftalık veri bulunmuyor.</div>
+        </div>
+      </div>
+      <!-- Search & Create League Card -->
+      <div id="league-join-create-card" class="bg-surface/30 backdrop-blur-[64px] border border-white/20 rounded-xl overflow-hidden glass-texture p-4 flex flex-col gap-4 shadow-xl relative">
+        <h3 class="text-sm font-bold text-on-surface border-b border-white/10 pb-2 flex items-center justify-between">
+          Lige Katıl veya Kur
+          <span class="material-symbols-outlined text-secondary text-lg">group_add</span>
+        </h3>
+        
+        <div class="flex flex-col gap-3">
+          <div class="relative w-full">
+            <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-sm">search</span>
+            <input type="text" id="league-search-input" placeholder="Lig davet kodu (örn: LIG-4200)" class="w-full bg-white/5 border border-white/10 rounded-full py-1.5 pl-9 pr-3 text-[11px] font-semibold text-white focus:outline-none focus:border-secondary placeholder:text-on-surface-variant/40 transition-all">
+          </div>
+          
+          <button onclick="window.joinLeagueByInput()" class="w-full px-3 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-white font-bold text-xs transition-colors flex items-center justify-center gap-1.5">
+            <span class="material-symbols-outlined text-sm">group_add</span> Lige Katıl
+          </button>
+          
+          <div class="border-t border-white/5 my-1"></div>
+          
+          <button onclick="window.openCreateLeagueModal()" class="w-full px-4 py-2 rounded-xl bg-secondary hover:bg-secondary/90 text-black font-bold text-xs transition-colors flex items-center justify-center gap-1.5 shadow-[0_0_10px_rgba(83,225,111,0.2)]">
+            <span class="material-symbols-outlined text-sm font-bold">add_circle</span> Yeni Lig Kur
+          </button>
+        </div>
+      </div>
+
+      <!-- League Management Card -->
+      <div id="league-management-card" class="hidden bg-surface/30 backdrop-blur-[64px] border border-white/20 rounded-xl overflow-hidden glass-texture p-4 flex flex-col gap-4 shadow-xl relative">
+        <h3 class="text-sm font-bold text-on-surface border-b border-white/10 pb-2 flex items-center justify-between">
+          <span id="league-mgmt-title">Lig Yönetimi</span>
+          <span class="material-symbols-outlined text-secondary text-lg" id="league-mgmt-icon">admin_panel_settings</span>
+        </h3>
+        
+        <!-- Admin Options Container -->
+        <div id="league-admin-options" class="hidden flex flex-col gap-2.5">
+          <button onclick="window.renameActiveLeague()" class="w-full px-3 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-white font-bold text-xs transition-colors flex items-center justify-center gap-1.5">
+            <span class="material-symbols-outlined text-sm">edit</span> Lig Adını Değiştir
+          </button>
+          
+          <button onclick="window.deleteActiveLeague()" class="w-full px-3 py-2 rounded-xl bg-red-500/10 hover:bg-red-500/20 border border-red-500/30 text-red-400 font-bold text-xs transition-colors flex items-center justify-center gap-1.5">
+            <span class="material-symbols-outlined text-sm">delete_forever</span> Ligi Kapat / Sil
+          </button>
+        </div>
+
+        <!-- Member Options Container -->
+        <div id="league-member-options" class="hidden flex flex-col gap-2.5">
+          <button onclick="window.leaveActiveLeague()" class="w-full px-3 py-2 rounded-xl bg-red-500/10 hover:bg-red-500/20 border border-red-500/30 text-red-400 font-bold text-xs transition-colors flex items-center justify-center gap-1.5">
+            <span class="material-symbols-outlined text-sm">logout</span> Ligden Ayrıl
+          </button>
+        </div>
+
+        <!-- Participant Management Section -->
+        <div id="league-participant-mgmt" class="hidden border-t border-white/10 pt-3 flex flex-col gap-2">
+          <h4 class="text-[11px] uppercase font-bold text-on-surface-variant mb-1">Katılımcı Yönetimi</h4>
+          <div id="league-participants-list" class="flex flex-col gap-2">
+            <!-- Dynamically populated rows with Kov/Çıkar buttons -->
+          </div>
+        </div>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<!-- Tab: Settings (Ayarlar) -->
+<div id="tab-settings" class="tab-content hidden">
+  <div class="mb-4 md:mb-5 flex justify-between items-center">
+    <h2 class="text-lg md:text-xl font-bold text-white tracking-tight">Ayarlar</h2>
+  </div>
+  
+  <div class="bg-white/5 backdrop-blur-[64px] border border-white/10 border-t-white/20 border-l-white/20 rounded-2xl p-5 shadow-xl text-white">
+    <div class="flex items-center gap-3 mb-6">
+      <span class="material-symbols-outlined text-2xl text-white">settings</span>
+      <h3 class="text-base md:text-lg font-semibold">Uygulama Ayarları</h3>
+    </div>
+    
+    <div class="space-y-4">
+      <div class="flex justify-between items-center border-b border-white/5 pb-3">
+        <div>
+          <h4 class="font-medium text-white text-sm">Bildirimler</h4>
+          <p class="text-[11px] text-on-surface-variant">Maç başlangıçlarında ve sonuçlarında bildirim al.</p>
+        </div>
+        <button class="w-9 h-5 rounded-full bg-secondary flex items-center p-0.5 transition-colors duration-200 focus:outline-none">
+          <span class="w-4 h-4 rounded-full bg-white shadow transform translate-x-4 transition-transform duration-200"></span>
+        </button>
+      </div>
+      <div class="flex justify-between items-center border-b border-white/5 pb-3">
+        <div>
+          <h4 class="font-medium text-white text-sm">Ses Efektleri</h4>
+          <p class="text-[11px] text-on-surface-variant">Skor tahminleri ve etkileşimler için sesleri aç.</p>
+        </div>
+        <button class="w-9 h-5 rounded-full bg-white/10 flex items-center p-0.5 transition-colors duration-200 focus:outline-none">
+          <span class="w-4 h-4 rounded-full bg-white shadow transform translate-x-0 transition-transform duration-200"></span>
+        </button>
+      </div>
+      <div>
+        <h4 class="font-medium text-white text-sm mb-2">Dil (Language)</h4>
+        <select class="bg-white/5 border border-white/10 rounded-lg px-2.5 py-1 text-xs font-semibold text-white focus:outline-none cursor-pointer backdrop-blur-sm w-36">
+          <option value="tr" class="bg-[#131313] text-white">Türkçe</option>
+          <option value="en" class="bg-[#131313] text-white">English</option>
+        </select>
+      </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</main>
+<script>
+        const API_BASE = window.location.origin + '/api';
+        
+        // Flag/Logo configuration from flagcdn.com
+        const flagMap = {
+            "mexico": "mx", "meksika": "mx",
+            "south korea": "kr", "güney kore": "kr",
+            "usa": "us", "abd": "us",
+            "australia": "au", "avustralya": "au",
+            "scotland": "gb-sct", "iskoçya": "gb-sct",
+            "morocco": "ma", "fas": "ma",
+            "brazil": "br", "brezilya": "br",
+            "haiti": "ht",
+            "türkiye": "tr", "turkey": "tr",
+            "paraguay": "py",
+            "netherlands": "nl", "hollanda": "nl",
+            "sweden": "se", "isveç": "se",
+            "germany": "de", "almanya": "de",
+            "ivory coast": "ci", "fildişi sahili": "ci", "fildişi": "ci",
+            "ecuador": "ec", "ekvador": "ec",
+            "curaçao": "cw", "kurasao": "cw",
+            "tunisia": "tn", "tunus": "tn",
+            "japan": "jp", "japonya": "jp",
+            "spain": "es", "ispanya": "es",
+            "saudi arabia": "sa", "suudi arabistan": "sa",
+            "belgium": "be", "belçika": "be",
+            "iran": "ir",
+            "uruguay": "uy",
+            "cape verde islands": "cv", "yeşil burun adaları": "cv", "cape verde": "cv",
+            "italy": "it", "italya": "it",
+            "cameroon": "cm", "kamerun": "cm",
+            "canada": "ca", "kanada": "ca",
+            "norway": "no", "norveç": "no",
+            "portugal": "pt", "portekiz": "pt",
+            "egypt": "eg", "mısır": "eg",
+            "panama": "pa",
+            "argentina": "ar", "arjantin": "ar",
+            "croatia": "hr", "hırvatistan": "hr",
+            "england": "gb-eng", "ingiltere": "gb-eng",
+            "austria": "at", "avusturya": "at",
+            "iraq": "iq", "irak": "iq",
+            "senegal": "sn",
+            "uzbekistan": "uz", "özbekistan": "uz",
+            "ghana": "gh", "gana": "gh",
+            "colombia": "co", "kolombiya": "co",
+            "dr congo": "cd", "demokratik kongo cumhuriyeti": "cd", "kongo demokratik cumhuriyeti": "cd", "demokratik kongo": "cd",
+            "switzerland": "ch", "isviçre": "ch",
+            "bosnia and herzegovina": "ba", "bosna hersek": "ba", "bosna": "ba",
+            "qatar": "qa", "katar": "qa",
+            "new zealand": "nz", "yeni zelanda": "nz",
+            "czechia": "cz", "çekya": "cz",
+            "south africa": "za", "güney afrika": "za",
+            "jordan": "jo", "ürdün": "jo"
+        };
+
+        function getUserAvatarHtml(user, extraClass = "border border-white/20", isCurrentUser = false) {
+            const clickAttr = isCurrentUser ? `onclick="window.changeProfilePicture()"` : '';
+            if (user.avatar && user.avatar !== 'null' && user.avatar !== 'None' && !user.avatar.includes('googleusercontent.com')) {
+                return `<img ${clickAttr} class="w-8 h-8 rounded-full object-cover ${extraClass}" src="${user.avatar}" onerror="this.outerHTML=getDefaultAvatarSvg('${extraClass}', '${clickAttr}')"/>`;
+            }
+            return getDefaultAvatarSvg(extraClass, clickAttr);
+        }
+
+        function getDefaultAvatarSvg(extraClass = "border border-white/20", clickAttr = '') {
+            return `<svg ${clickAttr} class="w-8 h-8 rounded-full bg-white/10 text-on-surface-variant p-1.5 ${extraClass} cursor-pointer hover:opacity-80 transition-opacity" viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5-4-8-4z"/></svg>`;
+        }
+
+        window.changeProfilePicture = function() {
+            const fileInput = document.createElement('input');
+            fileInput.type = 'file';
+            fileInput.accept = 'image/*';
+            
+            fileInput.onchange = function(e) {
+                const file = e.target.files[0];
+                if (!file) return;
+                
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const img = new Image();
+                    img.onload = function() {
+                        const canvas = document.createElement('canvas');
+                        const MAX_WIDTH = 128;
+                        const MAX_HEIGHT = 128;
+                        let width = img.width;
+                        let height = img.height;
+                        
+                        if (width > height) {
+                            if (width > MAX_WIDTH) {
+                                height *= MAX_WIDTH / width;
+                                width = MAX_WIDTH;
+                            }
+                        } else {
+                            if (height > MAX_HEIGHT) {
+                                width *= MAX_HEIGHT / height;
+                                height = MAX_HEIGHT;
+                            }
+                        }
+                        
+                        canvas.width = width;
+                        canvas.height = height;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, width, height);
+                        
+                        const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
+                        uploadAvatar(dataUrl);
+                    };
+                    img.src = event.target.result;
+                };
+                reader.readAsDataURL(file);
+            };
+            
+            fileInput.click();
+        };
+
+        async function uploadAvatar(base64Data) {
+            try {
+                const resp = await fetch(API_BASE + '/user/avatar', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({ avatar: base64Data })
+                });
+                
+                if (resp.ok) {
+                    alert("Profil fotoğrafınız başarıyla güncellendi!");
+                    if (currentUser) currentUser.avatar = base64Data;
+                    if (typeof updateHeaderProfileAvatar === 'function') {
+                        updateHeaderProfileAvatar();
+                    }
+                    await loadLeaderboardFromBackend();
+                } else {
+                    const data = await resp.json();
+                    alert("Profil fotoğrafı güncellenemedi: " + (data.error || "Bilinmeyen hata"));
+                }
+            } catch (e) {
+                alert("Sunucuyla bağlantı kurulamadı.");
+            }
+        }
+
+        function getTeamLogoUrl(teamName) {
+            if (!teamName) return "";
+            const key = teamName.toLowerCase().trim();
+            const code = flagMap[key];
+            if (code) {
+                return `https://flagcdn.com/w80/${code}.png`;
+            }
+            return "";
+        }
+
+        // Hero Carousel variables and methods
+        let currentHeroIndex = 0;
+        window.slideHero = function(direction) {
+            currentHeroIndex += direction;
+            renderHomeDashboard();
+        };
+
+        window.predictFromHero = function(matchId) {
+            const match = matchesData.find(m => String(m.id) === String(matchId));
+            if (!match) return;
+            
+            // 1. Switch to Matches tab
+            const navMatches = document.getElementById("nav-matches");
+            if (navMatches) navMatches.click();
+            
+            // 2. Switch to the correct match day tab
+            window.switchMatchDay(match.day);
+            
+            // 3. Highlight and scroll to the match card
+            setTimeout(() => {
+                const actionBtn = document.getElementById(`btn-action-${matchId}`);
+                if (actionBtn) {
+                    actionBtn.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    
+                    // Open the prediction panel if it's hidden
+                    const panel = document.getElementById(`predict-panel-${matchId}`);
+                    if (panel && panel.classList.contains("hidden")) {
+                        window.togglePrediction(matchId);
+                    }
+                }
+            }, 300);
+        };
+
+        // Tab switching and scroll effects
+        window.addEventListener('scroll', () => {
+            const header = document.getElementById('top-app-bar');
+            if (window.scrollY > 20) {
+                header.classList.add('bg-[#0e0e0e]/80', 'backdrop-blur-md', 'shadow-sm');
+                header.classList.remove('bg-transparent');
+            } else {
+                header.classList.remove('bg-[#0e0e0e]/80', 'backdrop-blur-md', 'shadow-sm');
+                header.classList.add('bg-transparent');
+            }
+        });
+
+        // App State
+        let matchesData = [];
+        let forumComments = [];
+        let leaderboardData = [];
+        let isLeagueOwner = localStorage.getItem('is_league_owner') === 'true';
+        let inActiveLeague = localStorage.getItem('in_active_league') === 'true';
+        let activeLeagueName = localStorage.getItem('active_league_name') || null;
+        let currentUserPredictions = JSON.parse(localStorage.getItem('user_predictions')) || {};
+
+        // Initialize leaderboardData based on active league status
+        if (inActiveLeague) {
+            if (isLeagueOwner) {
+                leaderboardData = [
+                    {
+                        name: 'Sen',
+                        avatar: null,
+                        predictions: 0,
+                        accuracy: 0,
+                        points: 0,
+                        isCurrentUser: true
+                    }
+                ];
+            } else {
+                leaderboardData = [
+                    { name: 'AhmetY', initials: 'AY', predictions: 12, accuracy: 70, points: 240, isCurrentUser: false },
+                    { name: 'Canberk_FB', initials: 'CF', predictions: 10, accuracy: 65, points: 210, isCurrentUser: false },
+                    {
+                        name: 'Sen',
+                        avatar: null,
+                        predictions: 0,
+                        accuracy: 0,
+                        points: 0,
+                        isCurrentUser: true
+                    },
+                    { name: 'SelinB', initials: 'SB', predictions: 8, accuracy: 55, points: 150, isCurrentUser: false },
+                    { name: 'DenizK', initials: 'DK', predictions: 5, accuracy: 48, points: 90, isCurrentUser: false }
+                ];
+            }
+        }
+
+        function updateLeagueHeader() {
+            const nameHeading = document.getElementById("league-name-heading");
+            const detailsText = document.getElementById("league-details-text");
+            if (inActiveLeague && activeLeagueName) {
+                if (nameHeading) nameHeading.innerText = activeLeagueName;
+                if (detailsText) {
+                    if (isLeagueOwner) {
+                        detailsText.innerText = `Sezon 2026/2027 • 1 Katılımcı (Sen) • Davet Kodu: ${localStorage.getItem('active_league_code') || 'LIG-1234'}`;
+                    } else {
+                        detailsText.innerText = `Sezon 2026/2027 • 5 Katılımcı • Kod: ${localStorage.getItem('active_league_code') || 'LIG-4321'}`;
+                    }
+                }
+            } else {
+                if (nameHeading) nameHeading.innerText = "Aktif Lig Bulunmuyor";
+                if (detailsText) detailsText.innerText = "Lütfen yeni bir lig kurun veya davet koduyla mevcut bir lige katılın.";
+            }
+        }
+
+        async function loadMatchesFromBackend() {
+            try {
+                const resp = await fetch(API_BASE + '/matches?_t=' + new Date().getTime());
+                if (resp.ok) {
+                    const data = await resp.json();
+                    matchesData = (data || []).map(m => {
+                        m.originalDay = m.day;
+                        return m;
+                    });
+                } else {
+                    matchesData = [];
+                }
+            } catch (e) {
+                console.error("Backend matches load failed.", e);
+                matchesData = [];
+            }
+            renderAllMatches();
+            renderPopularSidebar();
+            updateForumPlayedSelect();
+        }
+
+        function renderPopularSidebar() {
+            const container = document.getElementById("popular-sidebar-container");
+            if (!container) return;
+            
+            // Popüler Kartı Kontrolü: 2 maç dinamik olarak besle
+            const popularMatches = matchesData.filter(m => m.status !== 'BITTİ').slice(0, 2);
+            
+            if (popularMatches.length === 0) {
+                container.innerHTML = `<div class="text-center py-4 text-xs text-on-surface-variant/60 italic">Aktif popüler maç bulunmuyor.</div>`;
+                return;
+            }
+            
+            container.innerHTML = popularMatches.map(match => `
+                <div class="bg-white/5 border border-white/10 rounded-xl p-3 hover:bg-white/10 transition-colors cursor-pointer group" onclick="window.showPopularMatch('${match.id}', '${match.homeTeam} - ${match.awayTeam}')">
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="text-[10px] text-on-surface-variant uppercase font-bold tracking-wider">${match.league}</span>
+                        <span class="text-[10px] text-secondary font-bold">${match.time}</span>
+                    </div>
+                    <div class="flex items-center justify-between text-xs font-bold text-white">
+                        <span>${match.homeTeam}</span>
+                        <span class="text-on-surface-variant text-[10px]">VS</span>
+                        <span>${match.awayTeam}</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        async function loadLeaderboardFromBackend() {
+            try {
+                const resp = await fetch(API_BASE + '/leaderboard');
+                if (resp.ok) {
+                    const dbData = await resp.json();
+                    if (!inActiveLeague) {
+                        leaderboardData = dbData;
+                    } else {
+                        // If in league, update "Sen" points & accuracy from database stats
+                        const dbSen = dbData.find(u => u.isCurrentUser);
+                        const localSen = leaderboardData.find(u => u.name === 'Sen');
+                        if (dbSen && localSen) {
+                            localSen.points = dbSen.points;
+                            localSen.accuracy = dbSen.accuracy;
+                            localSen.predictions = dbSen.predictions;
+                            localSen.avatar = dbSen.avatar;
+                        }
+                    }
+                    renderLeaderboard();
+                }
+            } catch (e) {
+                console.error("Backend leaderboard load failed.", e);
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            // Fade in body once DOM and styles are fully ready
+            document.body.style.opacity = "1";
+
+            // Dynamic date button text update
+            const trMonths = ["Oca", "Şub", "Mar", "Nis", "May", "Haz", "Tem", "Ağu", "Eyl", "Eki", "Kas", "Ara"];
+            const trWeekdays = ["Paz", "Pzt", "Sal", "Çar", "Per", "Cum", "Cmt"];
+            
+            const today = new Date();
+            const yesterday = new Date(); yesterday.setDate(today.getDate() - 1);
+            const tomorrow = new Date(); tomorrow.setDate(today.getDate() + 1);
+            const day3 = new Date(); day3.setDate(today.getDate() + 2);
+            const day4 = new Date(); day4.setDate(today.getDate() + 3);
+            
+            const btnYesterday = document.getElementById("btn-day-yesterday");
+            if (btnYesterday) btnYesterday.innerHTML = `Dün & Öncesi, ${yesterday.getDate()} ${trMonths[yesterday.getMonth()]}`;
+            
+            const btnToday = document.getElementById("btn-day-today");
+            if (btnToday) btnToday.innerHTML = `Bugün, ${today.getDate()} ${trMonths[today.getMonth()]}`;
+            
+            const btnTomorrow = document.getElementById("btn-day-tomorrow");
+            if (btnTomorrow) btnTomorrow.innerHTML = `Yarın, ${tomorrow.getDate()} ${trMonths[tomorrow.getMonth()]}`;
+            
+            const btnMon = document.getElementById("btn-day-mon");
+            if (btnMon) btnMon.innerHTML = `${trWeekdays[day3.getDay()]}, ${day3.getDate()} ${trMonths[day3.getMonth()]}`;
+            
+            const btnTue = document.getElementById("btn-day-tue");
+            if (btnTue) btnTue.innerHTML = `${trWeekdays[day4.getDay()]} & Sonrası, ${day4.getDate()} ${trMonths[day4.getMonth()]}`;
+
+            const navButtons = document.querySelectorAll(".nav-btn");
+            const tabContents = document.querySelectorAll(".tab-content");
+
+            navButtons.forEach(btn => {
+                btn.addEventListener("click", (e) => {
+                    e.preventDefault();
+                    const selectedTab = btn.getAttribute("data-tab");
+
+                    // Hide all tab contents
+                    tabContents.forEach(content => {
+                        content.classList.add("hidden");
+                        content.classList.remove("block");
+                    });
+
+                    // Show selected tab content
+                    const activeContent = document.getElementById(`tab-${selectedTab}`);
+                    if (activeContent) {
+                        activeContent.classList.remove("hidden");
+                        activeContent.classList.add("block");
+                    }
+
+                    // Update nav button styles
+                    // Update nav button styles
+                    navButtons.forEach(navBtn => {
+                        const iconContainer = navBtn.querySelector(".icon-container");
+                        const icon = navBtn.querySelector(".icon-span");
+                        const label = navBtn.querySelector(".label-span");
+
+                        if (navBtn === btn) {
+                            navBtn.setAttribute("aria-current", "page");
+                            if (iconContainer) iconContainer.className = "icon-container flex items-center justify-center w-14 h-14 rounded-full text-white bg-white/10 shadow-[0_0_15px_rgba(255,255,255,0.1),inset_0_1px_1px_rgba(255,255,255,0.3)] border border-white/20 transition-all duration-200";
+                            if (icon) icon.style.fontVariationSettings = '"FILL" 1';
+                            if (label) label.className = "font-label-sm label-span text-[10px] text-white transition-colors font-bold";
+                        } else {
+                            navBtn.removeAttribute("aria-current");
+                            if (iconContainer) iconContainer.className = "icon-container flex items-center justify-center w-14 h-14 rounded-full text-on-surface-variant bg-transparent border border-transparent group-hover:bg-white/5 group-hover:text-white transition-all duration-300";
+                            if (icon) icon.style.fontVariationSettings = '"FILL" 0';
+                            if (label) label.className = "font-label-sm label-span text-[10px] text-on-surface-variant group-hover:text-white transition-colors";
+                        }
+                    });
+
+                    // Refresh tab data when switching
+                    if (selectedTab === 'home') renderHomeDashboard();
+                    if (selectedTab === 'matches') loadMatchesFromBackend();
+                    if (selectedTab === 'forum') renderForumTab();
+                    if (selectedTab === 'leagues') loadLeaderboardFromBackend();
+                });
+            });
+
+            // Initialize rendering
+            renderHomeDashboard();
+            renderAllMatches();
+            renderForumTab();
+            renderLeaderboard();
+        });
+
+        // Match day switching
+        let currentMatchDay = 'today';
+
+            window.switchMatchDay = function(dayId) {
+                currentMatchDay = dayId;
+                
+                const days = ['yesterday', 'today', 'tomorrow', 'mon', 'tue', 'calendar'];
+                days.forEach(id => {
+                    const btn = document.getElementById(`btn-day-${id}`);
+                    if (btn) {
+                        if (id === dayId) {
+                            btn.className = "day-btn px-4 py-2 rounded-full text-xs font-semibold bg-secondary/10 text-secondary border border-secondary/20 shadow-[0_0_15px_rgba(83,225,111,0.15)] transition-all";
+                        } else {
+                            btn.className = "day-btn px-4 py-2 rounded-full text-xs font-semibold bg-white/5 border border-white/10 text-on-surface-variant hover:text-white transition-all";
+                        }
+                    }
+                    
+                    const container = document.getElementById(`day-container-${id}`);
+                    if (container) {
+                        if (id === dayId) {
+                            container.classList.remove("hidden");
+                            container.classList.add("flex");
+                        } else {
+                            container.classList.add("hidden");
+                            container.classList.remove("flex");
+                        }
+                    }
+                });
+                
+                window.filterMatches();
+            };
+
+            window.handleCalendarDateChange = function(inputEl) {
+                const selectedDate = inputEl.value;
+                if (!selectedDate) return;
+                
+                const calendarBtnText = document.getElementById("calendar-btn-text");
+                if (calendarBtnText) calendarBtnText.innerText = selectedDate;
+                
+                matchesData.forEach(match => {
+                    if (match.date === selectedDate) {
+                        match.day = 'calendar';
+                    } else {
+                        match.day = match.originalDay || match.day;
+                    }
+                });
+                
+                window.switchMatchDay('calendar');
+                renderAllMatches();
+            };
+
+            window.openCalendarPicker = function() {
+                const picker = document.getElementById("calendar-date-picker");
+                if (picker) {
+                    try {
+                        picker.showPicker();
+                    } catch (e) {
+                        picker.click();
+                    }
+                }
+            };
+
+            // Interactive panels toggling
+            window.togglePrediction = function(matchId) {
+                const panel = document.getElementById(`predict-panel-${matchId}`);
+                if (panel) {
+                    const isHidden = panel.classList.contains("hidden");
+                    panel.classList.toggle("hidden");
+                    if (isHidden) {
+                        const inputs = document.getElementById(`predict-inputs-${matchId}`);
+                        const saved = document.getElementById(`saved-predict-${matchId}`);
+                        if (inputs) inputs.classList.remove("hidden");
+                        if (saved) saved.classList.add("hidden");
+                    }
+                }
+            };
+
+            window.toggleTotemUI = function(matchId) {
+                const totemToggle = document.getElementById(`totem-toggle-${matchId}`);
+                const isTotem = totemToggle ? totemToggle.checked : false;
+                const normalContainer = document.getElementById(`normal-pred-container-${matchId}`);
+                const totemContainer = document.getElementById(`totem-pred-container-${matchId}`);
+                
+                if (isTotem) {
+                    if (normalContainer) {
+                        normalContainer.classList.add("hidden");
+                        normalContainer.classList.remove("flex");
+                    }
+                    if (totemContainer) {
+                        totemContainer.classList.remove("hidden");
+                        totemContainer.classList.add("flex");
+                    }
+                } else {
+                    if (normalContainer) {
+                        normalContainer.classList.remove("hidden");
+                        normalContainer.classList.add("flex");
+                    }
+                    if (totemContainer) {
+                        totemContainer.classList.add("hidden");
+                        totemContainer.classList.remove("flex");
+                    }
+                }
+            };
+
+            window.savePrediction = function(matchId) {
+                const totemToggle = document.getElementById(`totem-toggle-${matchId}`);
+                const isTotem = totemToggle ? totemToggle.checked : false;
+                let choice = '1';
+                let diffVal = '1';
+                let labelText = '';
+                let predDiff = 0;
+                let homeScore = null;
+                let awayScore = null;
+
+                if (isTotem) {
+                    const homeScoreInput = document.getElementById(`input-home-score-${matchId}`);
+                    const awayScoreInput = document.getElementById(`input-away-score-${matchId}`);
+                    
+                    if (!homeScoreInput || homeScoreInput.value.trim() === '' || !awayScoreInput || awayScoreInput.value.trim() === '') {
+                        alert("Lütfen Ev Sahibi ve Deplasman gol tahminlerini girin!");
+                        return;
+                    }
+                    homeScore = parseInt(homeScoreInput.value);
+                    awayScore = parseInt(awayScoreInput.value);
+                    predDiff = homeScore - awayScore;
+                    
+                    if (predDiff > 0) choice = '1';
+                    else if (predDiff === 0) choice = 'X';
+                    else choice = '2';
+                    
+                    labelText = `Totem: ${homeScore} - ${awayScore}`;
+                } else {
+                    const diffInput = document.getElementById(`input-diff-${matchId}`);
+                    if (!diffInput || diffInput.value.trim() === '') {
+                        alert("Lütfen fark tahminini girin!");
+                        return;
+                    }
+                    predDiff = parseInt(diffInput.value);
+                    
+                    if (predDiff > 0) {
+                        choice = '1';
+                        labelText = `Ev Sahibi (+${predDiff} Fark)`;
+                    } else if (predDiff === 0) {
+                        choice = 'X';
+                        labelText = `Beraberlik (0 Fark)`;
+                    } else {
+                        choice = '2';
+                        labelText = `Deplasman (${predDiff} Fark)`;
+                    }
+                }
+
+                currentUserPredictions[matchId] = {
+                    choice: choice,
+                    diff: String(predDiff),
+                    labelText: labelText,
+                    predicted_difference: predDiff,
+                    predicted_home_score: homeScore,
+                    predicted_away_score: awayScore,
+                    is_totem: isTotem ? 1 : 0,
+                    saved: true
+                };
+
+                localStorage.setItem('user_predictions', JSON.stringify(currentUserPredictions));
+
+                // Re-render matches & update counts
+                renderAllMatches();
+                renderHomeDashboard();
+                updateForumPlayedSelect();
+
+                // Scroll panel to show saved state
+                const inputs = document.getElementById(`predict-inputs-${matchId}`);
+                const saved = document.getElementById(`saved-predict-${matchId}`);
+                const savedVal = document.getElementById(`saved-val-${matchId}`);
+                if (inputs) inputs.classList.add("hidden");
+                if (saved) saved.classList.remove("hidden");
+                if (savedVal) savedVal.innerText = labelText;
+            };
+
+            window.toggleAnalysis = function(matchId) {
+                const panel = document.getElementById(`analysis-panel-${matchId}`);
+                if (panel) panel.classList.toggle("hidden");
+            };
+
+            window.toggleLiveTracking = function(matchId) {
+                const panel = document.getElementById(`live-panel-${matchId}`);
+                if (panel) panel.classList.toggle("hidden");
+            };
+
+            window.showPopularMatch = function(matchId, queryText) {
+                const matchesBtn = document.getElementById("nav-matches");
+                if (matchesBtn) matchesBtn.click();
+                
+                const match = matchesData.find(m => m.id === matchId);
+                if (match) {
+                    window.switchMatchDay(match.day);
+                }
+                
+                const searchInput = document.getElementById("match-search-input");
+                if (searchInput) {
+                    searchInput.value = queryText;
+                    window.filterMatches();
+                }
+            };
+
+            window.filterMatches = function() {
+                const query = document.getElementById("match-search-input").value.toLowerCase().trim();
+                const container = document.getElementById(`day-container-${currentMatchDay}`);
+                if (!container) return;
+
+                const groups = container.querySelectorAll(".league-group");
+                let anyVisibleMatch = false;
+
+                groups.forEach(group => {
+                    const cards = group.querySelectorAll(".match-card");
+                    let groupVisibleCount = 0;
+
+                    cards.forEach(card => {
+                        const teams = card.getAttribute("data-teams") || "";
+                        const league = group.getAttribute("data-league") || "";
+                        
+                        if (teams.toLowerCase().includes(query) || league.toLowerCase().includes(query)) {
+                            card.classList.remove("hidden");
+                            groupVisibleCount++;
+                            anyVisibleMatch = true;
+                        } else {
+                            card.classList.add("hidden");
+                        }
+                    });
+
+                    if (groupVisibleCount > 0) {
+                        group.classList.remove("hidden");
+                    } else {
+                        group.classList.add("hidden");
+                    }
+                });
+
+                const alertBox = document.getElementById("no-matches-alert");
+                if (alertBox) {
+                    if (anyVisibleMatch) {
+                        alertBox.classList.add("hidden");
+                    } else {
+                        alertBox.classList.remove("hidden");
+                    }
+                }
+            };
+
+            window.submitUserComment = function() {
+                const textarea = document.getElementById("forum-comment-textarea");
+                const selectEl = document.getElementById("forum-played-match-select");
+                
+                if (!selectEl || !selectEl.value) {
+                    alert("Lütfen yorum yazmak için bir maç seçin!");
+                    return;
+                }
+                
+                if (!textarea || !textarea.value.trim()) {
+                    alert("Lütfen analiz içeriğini boş bırakmayın!");
+                    return;
+                }
+                
+                const matchId = selectEl.value;
+                const match = matchesData.find(m => m.id === matchId);
+                const selectedOption = selectEl.options[selectEl.selectedIndex];
+                const predictText = selectedOption.getAttribute("data-predict") || "";
+                
+                // Add user comment to Forum tab state
+                forumComments.unshift({
+                    userName: 'Senin Analizin',
+                    matchName: match ? `${match.homeTeam} vs ${match.awayTeam}` : 'Karşılaşma',
+                    predict: predictText,
+                    timeText: 'Şimdi',
+                    comment: textarea.value.trim(),
+                    statusText: 'Açık (Maç Bitti)', // Locked until results are integrated
+                    finished: match ? match.status === 'BITTİ' : false
+                });
+
+                renderForumTab();
+
+                textarea.value = '';
+                const fields = document.getElementById("forum-form-fields");
+                const successMsg = document.getElementById("forum-comment-success-message");
+                
+                if (fields) fields.classList.add("hidden");
+                if (successMsg) successMsg.classList.remove("hidden");
+
+                setTimeout(() => {
+                    if (fields) fields.classList.remove("hidden");
+                    if (successMsg) successMsg.classList.add("hidden");
+                }, 3000);
+            };
+
+            window.openCreateLeagueModal = function() {
+                const leagueName = prompt("Kurmak istediğiniz ligin adını girin:");
+                if (!leagueName || !leagueName.trim()) return;
+
+                isLeagueOwner = true;
+                inActiveLeague = true;
+                activeLeagueName = leagueName.trim();
+                const code = `LIG-${Math.floor(1000 + Math.random() * 9000)}`;
+                
+                localStorage.setItem('is_league_owner', 'true');
+                localStorage.setItem('in_active_league', 'true');
+                localStorage.setItem('active_league_name', activeLeagueName);
+                localStorage.setItem('active_league_code', code);
+
+                leaderboardData = [
+                    {
+                        name: 'Sen',
+                        avatar: currentUser ? currentUser.avatar : null,
+                        predictions: 0,
+                        accuracy: 0,
+                        points: 0,
+                        isCurrentUser: true
+                    }
+                ];
+                renderLeaderboard();
+                alert(`"${activeLeagueName}" ligi başarıyla oluşturuldu! Arkadaşlarınızın katılması için davet kodunu paylaşabilirsiniz.`);
+            };
+
+            window.joinLeagueByInput = function() {
+                const searchInput = document.getElementById("league-search-input");
+                const code = searchInput ? searchInput.value.trim() : "";
+                if (!code) {
+                    alert("Lütfen geçerli bir lig davet kodu girin!");
+                    return;
+                }
+
+                isLeagueOwner = false;
+                inActiveLeague = true;
+                activeLeagueName = "Özel Rekabet Ligi";
+                
+                localStorage.setItem('is_league_owner', 'false');
+                localStorage.setItem('in_active_league', 'true');
+                localStorage.setItem('active_league_name', activeLeagueName);
+                localStorage.setItem('active_league_code', code);
+
+                leaderboardData = [
+                    { name: 'AhmetY', initials: 'AY', predictions: 12, accuracy: 70, points: 240, isCurrentUser: false },
+                    { name: 'Canberk_FB', initials: 'CF', predictions: 10, accuracy: 65, points: 210, isCurrentUser: false },
+                    {
+                        name: 'Sen',
+                        avatar: currentUser ? currentUser.avatar : null,
+                        predictions: 0,
+                        accuracy: 0,
+                        points: 0,
+                        isCurrentUser: true
+                    },
+                    { name: 'SelinB', initials: 'SB', predictions: 8, accuracy: 55, points: 150, isCurrentUser: false },
+                    { name: 'DenizK', initials: 'DK', predictions: 5, accuracy: 48, points: 90, isCurrentUser: false }
+                ];
+                renderLeaderboard();
+                if (searchInput) searchInput.value = "";
+                alert(`Tebrikler! ${code} kodlu lige başarıyla katıldınız.`);
+            };
+
+        // Dynamic rendering functions
+        function renderAllMatches() {
+            const days = ['yesterday', 'today', 'tomorrow', 'mon', 'tue', 'calendar'];
+            days.forEach(dayId => {
+                const container = document.getElementById(`day-container-${dayId}`);
+                if (!container) return;
+
+                const dayMatches = matchesData.filter(m => m.day === dayId);
+                if (dayMatches.length === 0) {
+                    container.innerHTML = `
+                        <div class="bg-white/5 border border-white/10 p-6 rounded-2xl text-center text-on-surface-variant/60">
+                            <span class="material-symbols-outlined text-3xl mb-2">sports_soccer</span>
+                            <p class="text-sm font-semibold">Bu gün için yaklaşan maç bulunmuyor.</p>
+                        </div>`;
+                    return;
+                }
+
+                // Group by league
+                const leagues = {};
+                dayMatches.forEach(match => {
+                    if (!leagues[match.league]) {
+                        leagues[match.league] = {
+                            name: match.league,
+                            id: match.leagueId,
+                            colorFrom: match.leagueColorFrom || 'secondary/80',
+                            colorTo: match.leagueColorTo || 'secondary-container',
+                            matches: []
+                        };
+                    }
+                    leagues[match.league].matches.push(match);
+                });
+
+                container.innerHTML = Object.values(leagues).map(league => `
+                    <div class="league-group" data-league="${league.id}">
+                      <div class="flex items-center gap-2 mb-3">
+                        <div class="w-6 h-6 rounded-full bg-gradient-to-tr from-${league.colorFrom} to-${league.colorTo} flex items-center justify-center border border-white/10 shadow-md">
+                          <span class="material-symbols-outlined text-xs text-white">sports_soccer</span>
+                        </div>
+                        <span class="font-bold text-white text-xs md:text-sm">${league.name}</span>
+                      </div>
+                      ${league.matches.map(match => renderMatchCardHtml(match)).join('')}
+                    </div>
+                `).join('');
+            });
+            window.filterMatches();
+        }
+
+        function renderMatchCardHtml(match) {
+            const pred = currentUserPredictions[match.id];
+            const hasPrediction = pred && pred.saved;
+            const predText = hasPrediction ? pred.labelText : '';
+            
+            let timeOrStatus = `<span class="text-sm font-semibold text-white">${match.time}</span>`;
+            let statusTag = '';
+            let middleScore = 'VS';
+            let actionButton = '';
+            let drawers = '';
+
+            if (match.status === 'BITTİ') {
+                timeOrStatus = `<span class="text-xs font-semibold text-white">${match.day === 'yesterday' ? 'Dün' : 'Bitti'}</span>`;
+                statusTag = `<span class="text-[9px] font-bold text-on-surface-variant tracking-wider">BITTİ</span>`;
+                middleScore = `<span class="text-xs font-bold text-secondary bg-secondary/10 px-2.5 py-1 rounded border border-secondary/20">${match.score || '0 - 0'}</span>`;
+                actionButton = `
+                    <button onclick="window.toggleAnalysis('${match.id}')" class="bg-white/5 hover:bg-white/10 text-white border border-white/10 font-bold px-4 py-2 rounded-full text-xs flex items-center gap-1.5 transition-all">
+                      <span>Analizini Gör</span>
+                      <span class="material-symbols-outlined text-xs">visibility</span>
+                    </button>`;
+                
+                // Analysis drawer
+                drawers += `
+                    <div id="analysis-panel-${match.id}" class="hidden border-t border-white/5 pt-3 mt-1 flex flex-col gap-2.5">
+                      <div class="bg-black/30 p-3 rounded-xl border border-white/5">
+                        <div class="flex justify-between items-center mb-1.5">
+                          <span class="text-xs font-bold text-white">Senin Analizin</span>
+                          ${hasPrediction ? `<span class="text-[10px] text-secondary bg-secondary/10 px-1.5 py-0.5 rounded border border-secondary/20">✓ Yorum Kilidi Açıldı</span>` : ''}
+                        </div>
+                        <p class="text-[11px] text-on-surface-variant">${match.analysisText || 'Bu maç için henüz analiz yazılmamış. Forum sekmesinden analizinizi ekleyebilirsiniz.'}</p>
+                      </div>
+                    </div>`;
+
+            } else if (match.status === 'CANLI') {
+                timeOrStatus = `<span class="text-sm font-semibold text-white">${match.time}</span>`;
+                statusTag = `
+                    <span class="text-[9px] font-bold text-red-400 tracking-wider flex items-center gap-1">
+                      <span class="w-1.5 h-1.5 bg-red-500 rounded-full animate-pulse"></span> CANLI ${match.liveMinute || "0"}'
+                    </span>`;
+                middleScore = `<span class="text-xs font-bold text-red-400 bg-red-500/10 px-2.5 py-1 rounded border border-red-500/20">${match.score || '0 - 0'}</span>`;
+                actionButton = `
+                    <button onclick="window.toggleLiveTracking('${match.id}')" class="bg-white/5 hover:bg-white/10 text-white border border-white/10 font-bold px-4 py-2 rounded-full text-xs flex items-center gap-1.5 transition-all">
+                      <span>Canlı Takip</span>
+                      <span class="material-symbols-outlined text-xs text-red-400 animate-pulse">sensors</span>
+                    </button>`;
+
+                // Live drawer
+                drawers += `
+                    <div id="live-panel-${match.id}" class="hidden border-t border-white/5 pt-3 mt-1 flex flex-col gap-2.5">
+                      <div class="grid grid-cols-3 gap-2 text-center text-[10px] text-on-surface-variant bg-black/20 p-2.5 rounded-xl border border-white/5">
+                        <div>
+                          <span class="block text-white font-bold">%50</span>
+                          <span>Topla Oynama</span>
+                        </div>
+                        <div class="border-l border-r border-white/5">
+                          <span class="block text-white font-bold">5 - 4</span>
+                          <span>Şutlar</span>
+                        </div>
+                        <div>
+                          <span class="block text-white font-bold">2 - 3</span>
+                          <span>Korner</span>
+                        </div>
+                      </div>
+                    </div>`;
+
+            } else { // YAKINDA
+                statusTag = `<span class="text-[9px] font-bold text-secondary tracking-wider">YAKINDA</span>`;
+                middleScore = `<span class="text-xs font-bold text-on-surface-variant bg-white/5 px-2.5 py-1 rounded border border-white/5">VS</span>`;
+                
+                const btnText = hasPrediction ? 'Güncelle' : 'Tahmin Yap';
+                const btnClass = hasPrediction 
+                    ? "bg-white/5 hover:bg-white/10 text-white border border-white/10 font-bold px-4 py-2 rounded-full text-xs flex items-center gap-1.5 transition-all"
+                    : "bg-secondary hover:bg-secondary/90 text-black font-bold px-4 py-2 rounded-full text-xs flex items-center gap-1.5 transition-all shadow-[0_0_15px_rgba(83,225,111,0.3)]";
+
+                actionButton = `
+                    <button id="btn-action-${match.id}" onclick="window.togglePrediction('${match.id}')" class="${btnClass}">
+                      <span id="btn-text-${match.id}">${btnText}</span>
+                      <span class="material-symbols-outlined text-sm font-bold">arrow_forward</span>
+                    </button>`;
+
+                // Retrieve prediction details to restore state
+                const isChecked = pred && pred.is_totem ? 'checked' : '';
+                const normalHidden = pred && pred.is_totem ? 'hidden' : '';
+                const totemHidden = pred && pred.is_totem ? '' : 'hidden';
+                const diffValStr = pred ? pred.predicted_difference : '';
+                const homeScoreStr = pred && pred.predicted_home_score !== null && pred.predicted_home_score !== undefined ? pred.predicted_home_score : '';
+                const awayScoreStr = pred && pred.predicted_away_score !== null && pred.predicted_away_score !== undefined ? pred.predicted_away_score : '';
+
+                // Prediction inputs drawer
+                drawers += `
+                    <div id="predict-panel-${match.id}" class="hidden border-t border-white/5 pt-3 mt-1 transition-all duration-300">
+                      <div id="predict-inputs-${match.id}" class="flex flex-col gap-3 bg-black/30 border border-white/5 p-4 rounded-[12px]">
+                        
+                        <!-- Totem Toggle Row -->
+                        <div class="flex items-center justify-between border-b border-white/5 pb-2">
+                          <span class="text-xs text-on-surface-variant font-semibold">Totem</span>
+                          <input type="checkbox" id="totem-toggle-${match.id}" ${isChecked} onchange="window.toggleTotemUI('${match.id}')" class="rounded border-white/10 bg-white/5 text-secondary focus:ring-0 focus:ring-offset-0 w-4 h-4 cursor-pointer">
+                        </div>
+
+                        <div class="flex flex-col sm:flex-row items-center justify-between gap-3">
+                          <!-- Normal Prediction: Signed Difference Box -->
+                          <div id="normal-pred-container-${match.id}" class="${normalHidden} flex items-center gap-2 w-full sm:w-auto">
+                            <span class="text-xs text-on-surface-variant font-medium">Fark Tahmini:</span>
+                            <input type="number" id="input-diff-${match.id}" value="${diffValStr}" placeholder="Fark (Örn: +2, 0, -1)" class="w-32 bg-white/5 border border-white/10 rounded-lg px-2.5 py-1.5 text-xs font-semibold text-white focus:outline-none focus:border-secondary">
+                          </div>
+
+                          <!-- Totem Prediction: Home & Away Goals Input -->
+                          <div id="totem-pred-container-${match.id}" class="${totemHidden} flex items-center gap-2 w-full sm:w-auto">
+                            <span class="text-xs text-on-surface-variant font-medium">Tam Skor:</span>
+                            <input type="number" min="0" id="input-home-score-${match.id}" value="${homeScoreStr}" placeholder="Ev Gol" class="w-20 bg-white/5 border border-white/10 rounded-lg px-2.5 py-1.5 text-xs font-semibold text-white focus:outline-none focus:border-secondary">
+                            <span class="text-white text-xs">-</span>
+                            <input type="number" min="0" id="input-away-score-${match.id}" value="${awayScoreStr}" placeholder="Dep Gol" class="w-20 bg-white/5 border border-white/10 rounded-lg px-2.5 py-1.5 text-xs font-semibold text-white focus:outline-none focus:border-secondary">
+                          </div>
+
+                          <!-- Save Button -->
+                          <button onclick="window.savePrediction('${match.id}')" class="w-full sm:w-auto bg-secondary hover:bg-secondary/90 text-black font-bold px-4 py-1.5 rounded-lg text-xs transition-colors shadow-md shrink-0">Kaydet</button>
+                        </div>
+                      </div>
+                      
+                      <!-- Saved State Confirmation -->
+                      <div id="saved-predict-${match.id}" class="hidden flex items-center justify-between bg-secondary/10 border border-secondary/20 text-secondary p-2.5 rounded-[12px] text-xs font-bold mt-2">
+                        <span class="flex items-center gap-1.5">
+                          <span class="material-symbols-outlined text-sm">check_circle</span>
+                          <span>Tahminin Kaydedildi: <span id="saved-val-${match.id}" class="text-white font-semibold">${predText}</span></span>
+                        </span>
+                        <button onclick="window.togglePrediction('${match.id}')" class="text-on-surface-variant hover:text-white text-[10px]">Kapat</button>
+                      </div>
+                    </div>`;
+            }
+
+            return `
+              <div class="match-card bg-white/5 border border-white/10 rounded-2xl p-4 mb-3 transition-all hover:bg-white/10 flex flex-col gap-3" data-teams="${match.homeTeam.toLowerCase()} ${match.awayTeam.toLowerCase()}">
+                <div class="flex items-center justify-between">
+                  <div class="w-24 flex items-center gap-2">
+                    <div class="flex flex-col">
+                      ${timeOrStatus}
+                      ${statusTag}
+                    </div>
+                  </div>
+                  
+                  <div class="flex-grow flex items-center justify-center gap-4">
+                    <div class="flex items-center gap-2.5 w-[42%] justify-end">
+                      <span class="text-xs md:text-sm font-bold text-white tracking-tight">${match.homeTeam}</span>
+                      <div class="w-8 h-8 rounded-full overflow-hidden flex items-center justify-center border border-white/10 bg-gradient-to-tr ${match.homeLogoBg || 'from-zinc-800 to-zinc-600'} shadow-sm">
+                        ${getTeamLogoUrl(match.homeTeam) 
+                            ? `<img src="${getTeamLogoUrl(match.homeTeam)}" alt="${match.homeTeam}" class="w-full h-full object-cover" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';"><span class="hidden text-[10px] font-bold ${match.homeLogoText || 'text-white'}">${match.homeLogo}</span>`
+                            : `<span class="text-[10px] font-bold ${match.homeLogoText || 'text-white'}">${match.homeLogo}</span>`}
+                      </div>
+                    </div>
+                    
+                    ${middleScore}
+                    
+                    <div class="flex items-center gap-2.5 w-[42%] justify-start">
+                      <div class="w-8 h-8 rounded-full overflow-hidden flex items-center justify-center border border-white/10 bg-gradient-to-tr ${match.awayLogoBg || 'from-zinc-800 to-zinc-600'} shadow-sm">
+                        ${getTeamLogoUrl(match.awayTeam) 
+                            ? `<img src="${getTeamLogoUrl(match.awayTeam)}" alt="${match.awayTeam}" class="w-full h-full object-cover" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';"><span class="hidden text-[10px] font-bold ${match.awayLogoText || 'text-white'}">${match.awayLogo}</span>`
+                            : `<span class="text-[10px] font-bold ${match.awayLogoText || 'text-white'}">${match.awayLogo}</span>`}
+                      </div>
+                      <span class="text-xs md:text-sm font-bold text-white tracking-tight">${match.awayTeam}</span>
+                    </div>
+                  </div>
+                  
+                  <div class="w-32 flex justify-end">
+                    ${actionButton}
+                  </div>
+                </div>
+                ${drawers}
+              </div>`;
+        }
+
+        function renderForumTab() {
+            updateForumPlayedSelect();
+            const feed = document.getElementById("unlocked-comments-feed");
+            if (!feed) return;
+
+            if (forumComments.length === 0) {
+                feed.innerHTML = `
+                    <div class="bg-white/5 border border-white/10 p-6 rounded-2xl text-center text-on-surface-variant/60">
+                      <span class="material-symbols-outlined text-3xl mb-2">forum</span>
+                      <p class="text-sm font-semibold">Henüz paylaşılan analiz bulunmuyor.</p>
+                    </div>`;
+                return;
+            }
+
+            feed.innerHTML = forumComments.map(comment => `
+                <div class="bg-white/5 backdrop-blur-[64px] border border-white/10 border-t-white/20 border-l-white/20 rounded-2xl p-4 flex flex-col gap-3 shadow-xl relative overflow-hidden">
+                  <div class="flex justify-between items-center text-xs">
+                    <div class="flex items-center gap-2">
+                      <span class="font-bold text-white">${comment.userName}</span>
+                      <span class="text-[10px] bg-white/10 px-2 py-0.5 rounded border border-white/10 text-on-surface-variant font-medium">${comment.matchName}</span>
+                    </div>
+                    <span class="text-secondary font-bold text-[10px] flex items-center gap-1 bg-secondary/10 px-2 py-0.5 rounded border border-secondary/20">
+                      <span class="material-symbols-outlined text-xs">lock_open</span> ${comment.statusText}
+                    </span>
+                  </div>
+                  <div class="flex justify-between items-center border-b border-white/5 pb-2">
+                    <span class="text-xs text-on-surface-variant">Tahmin: <strong class="text-secondary">${comment.predict} ✓</strong></span>
+                    <span class="text-[10px] text-on-surface-variant">${comment.timeText}</span>
+                  </div>
+                  <div class="py-2.5 px-4 bg-black/20 rounded-lg border border-white/5">
+                    <p class="text-xs text-white leading-relaxed font-medium">${comment.comment}</p>
+                  </div>
+                </div>
+            `).join('');
+        }
+
+        function updateForumPlayedSelect() {
+            const selectEl = document.getElementById("forum-played-match-select");
+            if (!selectEl) return;
+
+            // Get matches that have prediction in currentUserPredictions
+            const predictedMatches = matchesData.filter(m => currentUserPredictions[m.id] && currentUserPredictions[m.id].saved);
+            
+            if (predictedMatches.length === 0) {
+                selectEl.innerHTML = `<option value="" disabled selected class="bg-[#131313] text-on-surface-variant">Tahmin ettiğiniz aktif maç bulunmuyor</option>`;
+                return;
+            }
+
+            selectEl.innerHTML = predictedMatches.map(m => `
+                <option value="${m.id}" data-predict="${currentUserPredictions[m.id].labelText}" class="bg-[#131313] text-white">
+                  ${m.homeTeam} vs ${m.awayTeam} (Tahminin: ${currentUserPredictions[m.id].labelText})
+                </option>
+            `).join('');
+        }
+
+        function renderLeaderboard() {
+            const body = document.getElementById("leaderboard-table-body");
+            if (!body) return;
+
+            if (leaderboardData.length === 0) {
+                body.innerHTML = `<div class="p-6 text-center text-on-surface-variant/60 text-xs italic">Sıralama verisi bulunmuyor.</div>`;
+                if (typeof renderLeagueManagement === "function") renderLeagueManagement();
+                return;
+            }
+
+            body.innerHTML = leaderboardData.map((user, idx) => {
+                const rank = idx + 1;
+                const isCurrentUser = user.isCurrentUser;
+                const avatarHtml = getUserAvatarHtml(user, isCurrentUser ? 'border-2 border-secondary-container shadow-[0_0_10px_rgba(5,176,70,0.5)] cursor-pointer hover:opacity-85 transition-opacity' : 'border border-white/20', isCurrentUser);
+                
+                if (isCurrentUser) {
+                    return `
+                      <div class="relative grid grid-cols-12 gap-4 p-4 items-center border-b border-white/10 bg-secondary-container/10 shadow-[inset_0_0_20px_rgba(5,176,70,0.15)] group">
+                        <div class="absolute left-0 top-0 bottom-0 w-1 bg-secondary-container rounded-r-full"></div>
+                        <div class="col-span-2 md:col-span-1 text-center font-bold text-on-surface">${rank}</div>
+                        <div class="col-span-4 flex items-center gap-3">
+                          ${avatarHtml}
+                          <span class="font-semibold text-on-surface text-sm flex items-center gap-2">Sen <span class="bg-secondary-container/20 text-secondary border border-secondary-container/30 px-2 py-0.5 rounded-full text-[9px] uppercase font-bold">Aktif</span></span>
+                        </div>
+                        <div class="col-span-2 text-right text-on-surface text-sm">${user.predictions}</div>
+                        <div class="col-span-2 text-right text-on-surface text-sm">${user.accuracy}%</div>
+                        <div class="col-span-2 text-right font-bold text-white text-sm drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]">${user.points}</div>
+                      </div>`;
+                } else {
+                    return `
+                      <div class="grid grid-cols-12 gap-4 p-4 items-center border-b border-white/5 hover:bg-white/5 transition-colors group">
+                        <div class="col-span-2 md:col-span-1 text-center font-bold ${rank === 1 ? 'text-secondary' : 'text-on-surface-variant'}">${rank}</div>
+                        <div class="col-span-4 flex items-center gap-3">
+                          ${avatarHtml}
+                          <span class="font-semibold text-on-surface text-sm">${user.name}</span>
+                        </div>
+                        <div class="col-span-2 text-right text-on-surface-variant text-sm">${user.predictions}</div>
+                        <div class="col-span-2 text-right text-on-surface-variant text-sm">${user.accuracy}%</div>
+                        <div class="col-span-2 text-right font-bold ${rank === 1 ? 'text-secondary-fixed' : 'text-on-surface'} text-sm">${user.points}</div>
+                      </div>`;
+                }
+            }).join('');
+
+            if (typeof updateLeagueHeader === "function") updateLeagueHeader();
+            if (typeof renderLeagueManagement === "function") renderLeagueManagement();
+        }
+
+        function renderHomeDashboard() {
+            const accuracyEl = document.getElementById("user-accuracy");
+            const pointsEl = document.getElementById("user-points");
+            const featContainer = document.getElementById("featured-match-container");
+            const popContainer = document.getElementById("popular-predictions-container");
+
+            // Calculate accuracy and points from leaderboard data dynamically
+            const currentUserObj = leaderboardData.find(u => u.isCurrentUser);
+            if (currentUserObj) {
+                if (accuracyEl) accuracyEl.innerText = `%${currentUserObj.accuracy}`;
+                if (pointsEl) pointsEl.innerText = currentUserObj.points;
+            } else {
+                if (accuracyEl) accuracyEl.innerText = "%0";
+                if (pointsEl) pointsEl.innerText = "0";
+            }
+
+            // Featured match Carousel
+            const upcomingMatches = matchesData.filter(m => m.status === 'YAKINDA');
+            upcomingMatches.sort((a, b) => {
+                const dateA = new Date(`${a.date}T${a.time}:00`);
+                const dateB = new Date(`${b.date}T${b.time}:00`);
+                return dateA - dateB;
+            });
+
+            if (featContainer) {
+                if (upcomingMatches.length > 0) {
+                    if (currentHeroIndex < 0) currentHeroIndex = upcomingMatches.length - 1;
+                    if (currentHeroIndex >= upcomingMatches.length) currentHeroIndex = 0;
+                    
+                    const match = upcomingMatches[currentHeroIndex];
+                    
+                    featContainer.innerHTML = `
+                        <div class="relative flex items-center justify-between gap-4 w-full">
+                          <!-- Left Arrow -->
+                          <button onclick="window.slideHero(-1)" class="w-8 h-8 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 text-white flex items-center justify-center transition-colors focus:outline-none z-20">
+                            <span class="material-symbols-outlined text-base">chevron_left</span>
+                          </button>
+
+                          <!-- Slide Content -->
+                          <div class="flex-grow flex flex-col md:flex-row justify-between items-center relative z-10 gap-6 md:gap-8 px-4">
+                            <div class="flex flex-col items-center space-y-3 w-[30%]">
+                              <div class="w-16 h-16 md:w-20 md:h-20 rounded-full overflow-hidden flex items-center justify-center border border-white/10 bg-gradient-to-tr ${match.homeLogoBg || 'from-zinc-800 to-zinc-600'} shadow-lg">
+                                ${getTeamLogoUrl(match.homeTeam)
+                                    ? `<img src="${getTeamLogoUrl(match.homeTeam)}" alt="${match.homeTeam}" class="w-full h-full object-cover" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"><span class="hidden text-xl font-bold text-white">${match.homeLogo}</span>`
+                                    : `<span class="text-xl font-bold text-white">${match.homeLogo}</span>`}
+                              </div>
+                              <h2 class="text-lg md:text-xl text-white font-semibold tracking-tight text-center truncate w-full">${match.homeTeam}</h2>
+                            </div>
+                            
+                            <div class="flex flex-col items-center text-center space-y-2 w-[40%]">
+                              <span class="text-on-surface-variant font-label-sm text-[10px] tracking-widest uppercase font-semibold">${match.league}</span>
+                              <div class="text-2xl md:text-3xl font-bold text-white flex items-baseline gap-2 tracking-tighter">
+                                <span>VS</span>
+                              </div>
+                              <span class="text-on-surface-variant font-body-md text-xs mt-1.5 flex items-center gap-1.5 font-medium">
+                                <span class="material-symbols-outlined text-sm">schedule</span>
+                                ${match.date} ${match.time}
+                              </span>
+                              <div class="mt-4 flex flex-col items-center gap-2">
+                                <button onclick="window.predictFromHero('${match.id}')" class="px-5 py-2.5 rounded-full bg-secondary hover:bg-secondary/90 text-black font-bold text-xs flex items-center gap-1.5 transition-all shadow-[0_0_15px_rgba(83,225,111,0.3)]">
+                                  <span class="material-symbols-outlined text-base">query_stats</span>
+                                  Hemen Tahmin Et
+                                </button>
+                                <span class="text-[10px] text-on-surface-variant/70 font-semibold">${currentHeroIndex + 1} / ${upcomingMatches.length}</span>
+                              </div>
+                            </div>
+                            
+                            <div class="flex flex-col items-center space-y-3 w-[30%]">
+                              <div class="w-16 h-16 md:w-20 md:h-20 rounded-full overflow-hidden flex items-center justify-center border border-white/10 bg-gradient-to-tr ${match.awayLogoBg || 'from-zinc-800 to-zinc-600'} shadow-lg">
+                                ${getTeamLogoUrl(match.awayTeam)
+                                    ? `<img src="${getTeamLogoUrl(match.awayTeam)}" alt="${match.awayTeam}" class="w-full h-full object-cover" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"><span class="hidden text-xl font-bold text-white">${match.awayLogo}</span>`
+                                    : `<span class="text-xl font-bold text-white">${match.awayLogo}</span>`}
+                              </div>
+                              <h2 class="text-lg md:text-xl text-white font-semibold tracking-tight text-center truncate w-full">${match.awayTeam}</h2>
+                            </div>
+                          </div>
+
+                          <!-- Right Arrow -->
+                          <button onclick="window.slideHero(1)" class="w-8 h-8 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 text-white flex items-center justify-center transition-colors focus:outline-none z-20">
+                            <span class="material-symbols-outlined text-base">chevron_right</span>
+                          </button>
+                        </div>`;
+                } else {
+                    featContainer.innerHTML = `
+                        <div class="text-center py-8 text-on-surface-variant flex flex-col items-center gap-2">
+                          <span class="material-symbols-outlined text-4xl text-on-surface-variant">sports_soccer</span>
+                          <p class="text-sm font-semibold">Öne Çıkan Karşılaşma Bulunmuyor</p>
+                          <p class="text-xs text-on-surface-variant/60">Yakın zamanda başlayacak maçlar burada listelenecektir.</p>
+                        </div>`;
+                }
+            }
+
+            // Popular predictions sidebar
+            renderPopularSidebar();
+        }
+
+        function renderPopularSidebar() {
+            const container = document.getElementById("popular-sidebar-container");
+            const popContainer = document.getElementById("popular-predictions-container");
+            if (!container) return;
+
+            const popularMatches = matchesData.filter(m => m.popular);
+            if (popularMatches.length === 0) {
+                container.innerHTML = `<div class="text-center py-4 text-xs text-on-surface-variant/60 italic">Aktif popüler maç bulunmuyor.</div>`;
+                if (popContainer) {
+                    popContainer.innerHTML = `
+                        <h3 class="text-base md:text-lg text-white font-semibold tracking-tight">Popüler Tahminler</h3>
+                        <div class="text-center py-6 text-xs text-on-surface-variant/60 italic">Henüz popüler tahmin bulunmuyor.</div>`;
+                }
+                return;
+            }
+
+            container.innerHTML = popularMatches.map(m => `
+                <div onclick="window.showPopularMatch('${m.day}', '${m.homeTeam.toLowerCase()} ${m.awayTeam.toLowerCase()}')" class="bg-white/5 border border-white/10 hover:bg-white/10 rounded-xl p-3 flex justify-between items-center transition-all cursor-pointer group">
+                  <div class="flex flex-col">
+                    <span class="text-[9px] text-on-surface-variant font-bold">${m.league} • ${m.time}</span>
+                    <span class="text-xs font-bold text-white mt-0.5 group-hover:text-secondary transition-colors">${m.homeLogo} vs ${m.awayLogo}</span>
+                  </div>
+                  <span class="material-symbols-outlined text-on-surface-variant group-hover:text-white transition-colors text-sm">chevron_right</span>
+                </div>
+            `).join('');
+
+            // Also render home popular prediction card
+            if (popContainer && popularMatches.length > 0) {
+                const top = popularMatches[0];
+                popContainer.innerHTML = `
+                    <h3 class="text-base md:text-lg text-white font-semibold tracking-tight">Popüler Tahminler</h3>
+                    <div class="bg-black/20 rounded-md p-3.5 border border-white/10">
+                      <div class="flex justify-between items-center mb-2">
+                        <span class="text-xs text-on-surface-variant">${top.homeTeam} vs ${top.awayTeam}</span>
+                        <span class="px-1.5 py-0.5 rounded text-[10px] bg-white/10 text-white flex items-center gap-1 border border-white/10 backdrop-blur-sm">
+                          <span class="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span>
+                          ${top.status === 'CANLI' ? 'Canlı' : 'Yakında'}
+                        </span>
+                      </div>
+                      <div class="flex justify-between items-baseline">
+                        <span class="text-base font-medium text-white">${top.homeTeam} Kazanır</span>
+                        <span class="text-white font-bold text-base">%85</span>
+                      </div>
+                    </div>
+                    <div class="pt-3 border-t border-white/10 flex justify-between items-center">
+                      <span class="text-xs text-on-surface-variant">Popülerlik: Yüksek</span>
+                      <span class="text-xs text-white font-medium">Toplam Tahmin: 1.2M</span>
+                    </div>`;
+            }
+        }
+
+        // Mock data loading has been permanently disabled per user request
+        window.loadMockData = function() {
+            console.log("Mock data is disabled.");
+        };
+
+        window.clearAllData = function() {
+            matchesData = [];
+            forumComments = [];
+            leaderboardData = [];
+            isLeagueOwner = false;
+            currentUserPredictions = {};
+            localStorage.removeItem('user_predictions');
+
+            const containerWeekly = document.getElementById("weekly-best-container");
+            if (containerWeekly) {
+                containerWeekly.innerHTML = `<div class="text-center py-4 text-xs text-on-surface-variant/60 italic">Haftalık veri bulunmuyor.</div>`;
+            }
+
+            const nameHeading = document.getElementById("league-name-heading");
+            const detailsText = document.getElementById("league-details-text");
+            if (nameHeading) nameHeading.innerText = "Aktif Lig Bulunmuyor";
+            if (detailsText) detailsText.innerText = "Lütfen yeni bir lig kurun veya davet koduyla mevcut bir lige katılın.";
+
+            renderAllMatches();
+            renderForumTab();
+            renderLeaderboard();
+            renderHomeDashboard();
+            alert("Tüm veriler temizlendi!");
+        };
+
+        window.renameActiveLeague = function() {
+            if (!isLeagueOwner) return;
+            const nameHeading = document.getElementById("league-name-heading");
+            const currentName = nameHeading ? nameHeading.innerText : "";
+            const newName = prompt("Yeni lig adını girin:", currentName);
+            if (!newName || !newName.trim()) return;
+
+            if (nameHeading) nameHeading.innerText = newName.trim();
+            alert(`Lig adı "${newName.trim()}" olarak güncellendi.`);
+        };
+
+        window.deleteActiveLeague = function() {
+            if (!isLeagueOwner) return;
+            const currentName = activeLeagueName || "Lig";
+            if (!confirm(`"${currentName}" ligini kapatıp silmek istediğinize emin misiniz? Tüm katılımcı verileri sıfırlanacaktır.`)) return;
+
+            isLeagueOwner = false;
+            inActiveLeague = false;
+            activeLeagueName = null;
+            
+            localStorage.removeItem('is_league_owner');
+            localStorage.removeItem('in_active_league');
+            localStorage.removeItem('active_league_name');
+            localStorage.removeItem('active_league_code');
+
+            updateLeagueHeader();
+            loadLeaderboardFromBackend();
+            alert("Lig başarıyla kapatıldı ve silindi.");
+        };
+
+        window.leaveActiveLeague = function() {
+            if (isLeagueOwner) return;
+            const currentName = activeLeagueName || "Lig";
+            if (!confirm(`"${currentName}" liginden ayrılmak istediğinize emin misiniz?`)) return;
+
+            isLeagueOwner = false;
+            inActiveLeague = false;
+            activeLeagueName = null;
+            
+            localStorage.removeItem('is_league_owner');
+            localStorage.removeItem('in_active_league');
+            localStorage.removeItem('active_league_name');
+            localStorage.removeItem('active_league_code');
+
+            updateLeagueHeader();
+            loadLeaderboardFromBackend();
+            alert("Ligden başarıyla ayrıldınız.");
+        };
+
+        window.kickParticipant = function(userName) {
+            if (!isLeagueOwner) return;
+            if (!confirm(`"${userName}" isimli katılımcıyı ligden çıkarmak istediğinize emin misiniz?`)) return;
+
+            leaderboardData = leaderboardData.filter(u => u.name !== userName);
+
+            const detailsText = document.getElementById("league-details-text");
+            if (detailsText) {
+                const text = detailsText.innerText;
+                const countMatch = text.match(/(\d+)\s+Katılımcı/);
+                if (countMatch) {
+                    const count = parseInt(countMatch[1], 10);
+                    if (count > 0) {
+                        const newCount = count - 1;
+                        detailsText.innerText = text.replace(`${count} Katılımcı`, `${newCount} Katılımcı`);
+                    }
+                }
+            }
+
+            renderLeaderboard();
+            alert(`"${userName}" ligden çıkarıldı.`);
+        };
+
+        function renderLeagueManagement() {
+            const joinCreateCard = document.getElementById("league-join-create-card");
+            const managementCard = document.getElementById("league-management-card");
+            if (!managementCard) return;
+
+            if (!inActiveLeague) {
+                managementCard.classList.add("hidden");
+                if (joinCreateCard) joinCreateCard.classList.remove("hidden");
+                return;
+            }
+
+            if (joinCreateCard) joinCreateCard.classList.add("hidden");
+            managementCard.classList.remove("hidden");
+
+            const adminOptions = document.getElementById("league-admin-options");
+            const memberOptions = document.getElementById("league-member-options");
+            const participantMgmt = document.getElementById("league-participant-mgmt");
+            const mgmtTitle = document.getElementById("league-mgmt-title");
+            const mgmtIcon = document.getElementById("league-mgmt-icon");
+
+            if (isLeagueOwner) {
+                if (adminOptions) adminOptions.classList.remove("hidden");
+                if (memberOptions) memberOptions.classList.add("hidden");
+                if (participantMgmt) participantMgmt.classList.remove("hidden");
+                if (mgmtTitle) mgmtTitle.innerText = "Lig Yönetimi";
+                if (mgmtIcon) mgmtIcon.innerText = "admin_panel_settings";
+
+                const listEl = document.getElementById("league-participants-list");
+                if (listEl) {
+                    const nonCurrentUsers = leaderboardData.filter(u => !u.isCurrentUser);
+                    if (nonCurrentUsers.length === 0) {
+                        listEl.innerHTML = `<div class="text-xs text-on-surface-variant/60 italic p-1">Ligde başka katılımcı yok.</div>`;
+                    } else {
+                        listEl.innerHTML = nonCurrentUsers.map(user => `
+                            <div class="flex items-center justify-between bg-black/20 p-2 rounded-lg border border-white/5">
+                              <div class="flex items-center gap-2">
+                                ${user.avatar ? `<img class="w-6 h-6 rounded-full border border-white/20 object-cover" src="${user.avatar}"/>` : `<div class="w-6 h-6 rounded-full border border-white/20 bg-surface-container flex items-center justify-center font-bold text-[10px] text-white">${user.initials || user.name.slice(0, 2).toUpperCase()}</div>`}
+                                <span class="text-on-surface text-xs font-semibold">${user.name}</span>
+                              </div>
+                              <button onclick="window.kickParticipant('${user.name}')" class="px-2 py-1 rounded bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 font-bold text-[10px] transition-colors">Kov</button>
+                            </div>
+                        `).join('');
+                    }
+                }
+            } else {
+                if (adminOptions) adminOptions.classList.add("hidden");
+                if (memberOptions) memberOptions.classList.remove("hidden");
+                if (participantMgmt) participantMgmt.classList.add("hidden");
+                if (mgmtTitle) mgmtTitle.innerText = "Lig Seçenekleri";
+                if (mgmtIcon) mgmtIcon.innerText = "group";
+            }
+        }
+    </script>
+
+<!-- ═══════════════════════════════════════════════════════════════════════════
+     AUTH MODAL OVERLAY - Giriş / Kayıt Ekranı
+     Menüye, genel tasarıma ve iskelet yapıya DOKUNULMADI.
+     ═══════════════════════════════════════════════════════════════════════════ -->
+<div id="auth-overlay" class="fixed inset-0 z-[9999] flex items-center justify-center bg-black/80 backdrop-blur-xl transition-opacity duration-500" style="display:none;">
+  <div class="bg-surface-container border border-white/10 rounded-2xl shadow-2xl w-[90%] max-w-[400px] p-8 flex flex-col gap-6 relative overflow-hidden glass-texture">
+    <!-- Logo -->
+    <div class="text-center flex flex-col items-center gap-2">
+      <img src="logo.png" alt="TahminLigim" class="h-11 md:h-14 w-auto object-contain mb-2">
+      <p class="text-xs text-on-surface-variant">Tahmin ligine hoş geldin</p>
+    </div>
+
+    <!-- Tab Buttons -->
+    <div class="flex rounded-xl bg-white/5 p-1 border border-white/10">
+      <button id="auth-tab-login" onclick="window.switchAuthTab('login')" class="flex-1 py-2 rounded-lg text-xs font-bold text-black bg-secondary transition-colors">Giriş Yap</button>
+      <button id="auth-tab-register" onclick="window.switchAuthTab('register')" class="flex-1 py-2 rounded-lg text-xs font-bold text-on-surface-variant hover:text-white transition-colors">Kayıt Ol</button>
+    </div>
+
+    <!-- Error Message -->
+    <div id="auth-error" class="hidden" style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);color:#f87171;font-size:12px;font-weight:600;padding:12px;border-radius:12px;text-align:center;"></div>
+
+    <!-- Login Form -->
+    <div id="auth-form-login" class="flex flex-col gap-4">
+      <div>
+        <label class="block text-[10px] uppercase font-bold text-on-surface-variant mb-1.5">Kullanıcı Adı</label>
+        <input type="text" id="login-username" placeholder="kullaniciadi" autocomplete="username" class="w-full bg-white/5 border border-white/10 rounded-xl py-2.5 px-4 text-sm font-semibold text-white focus:outline-none focus:border-secondary placeholder:text-on-surface-variant/40 transition-all">
+      </div>
+      <div>
+        <label class="block text-[10px] uppercase font-bold text-on-surface-variant mb-1.5">Şifre</label>
+        <input type="password" id="login-password" placeholder="••••••" autocomplete="current-password" class="w-full bg-white/5 border border-white/10 rounded-xl py-2.5 px-4 text-sm font-semibold text-white focus:outline-none focus:border-secondary placeholder:text-on-surface-variant/40 transition-all">
+      </div>
+      <button onclick="window.handleLogin()" id="btn-login" class="w-full py-3 rounded-xl bg-secondary hover:bg-secondary/90 text-black font-bold text-sm transition-colors shadow-[0_0_15px_rgba(83,225,111,0.3)] flex items-center justify-center gap-2">
+        <span class="material-symbols-outlined text-lg">login</span> Giriş Yap
+      </button>
+    </div>
+
+    <!-- Register Form -->
+    <div id="auth-form-register" class="hidden flex flex-col gap-4">
+      <div>
+        <label class="block text-[10px] uppercase font-bold text-on-surface-variant mb-1.5">Kullanıcı Adı</label>
+        <input type="text" id="register-username" placeholder="kullaniciadi" autocomplete="username" class="w-full bg-white/5 border border-white/10 rounded-xl py-2.5 px-4 text-sm font-semibold text-white focus:outline-none focus:border-secondary placeholder:text-on-surface-variant/40 transition-all">
+      </div>
+      <div>
+        <label class="block text-[10px] uppercase font-bold text-on-surface-variant mb-1.5">Şifre (min. 6 karakter)</label>
+        <input type="password" id="register-password" placeholder="••••••" autocomplete="new-password" class="w-full bg-white/5 border border-white/10 rounded-xl py-2.5 px-4 text-sm font-semibold text-white focus:outline-none focus:border-secondary placeholder:text-on-surface-variant/40 transition-all">
+      </div>
+      <button onclick="window.handleRegister()" id="btn-register" class="w-full py-3 rounded-xl bg-secondary hover:bg-secondary/90 text-black font-bold text-sm transition-colors shadow-[0_0_15px_rgba(83,225,111,0.3)] flex items-center justify-center gap-2">
+        <span class="material-symbols-outlined text-lg">person_add</span> Kayıt Ol
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════════
+     AUTH & API INTEGRATION LAYER
+     ═══════════════════════════════════════════════════════════════════════════ -->
+<script>
+(function() {
+    const API_BASE = window.location.origin + '/api';
+    let currentUser = null;
+
+    function updateHeaderProfileAvatar() {
+        const container = document.getElementById('header-profile-avatar-container');
+        if (!container) return;
+        
+        if (currentUser && currentUser.avatar) {
+            container.innerHTML = `<img class="w-7 h-7 rounded-full object-cover border border-white/20 cursor-pointer hover:opacity-80 transition-opacity" onclick="window.changeProfilePicture()" src="${currentUser.avatar}" onerror="this.outerHTML='<span class=\'material-symbols-outlined\' style=\'font-size:28px;\'>account_circle</span>'"/>`;
+        } else {
+            container.innerHTML = `<span class="material-symbols-outlined cursor-pointer hover:opacity-80 transition-opacity" onclick="window.changeProfilePicture()" style="font-size: 28px;">account_circle</span>`;
+        }
+    }
+
+    // ─── Auth Tab Switching ──────────────────────────────────────────────
+    window.switchAuthTab = function(tab) {
+        const loginForm = document.getElementById('auth-form-login');
+        const registerForm = document.getElementById('auth-form-register');
+        const loginTab = document.getElementById('auth-tab-login');
+        const registerTab = document.getElementById('auth-tab-register');
+        const errorEl = document.getElementById('auth-error');
+
+        if (errorEl) { errorEl.classList.add('hidden'); errorEl.textContent = ''; }
+
+        if (tab === 'login') {
+            loginForm.classList.remove('hidden');
+            registerForm.classList.add('hidden');
+            loginTab.className = 'flex-1 py-2 rounded-lg text-xs font-bold text-black bg-secondary transition-colors';
+            registerTab.className = 'flex-1 py-2 rounded-lg text-xs font-bold text-on-surface-variant hover:text-white transition-colors';
+        } else {
+            loginForm.classList.add('hidden');
+            registerForm.classList.remove('hidden');
+            registerTab.className = 'flex-1 py-2 rounded-lg text-xs font-bold text-black bg-secondary transition-colors';
+            loginTab.className = 'flex-1 py-2 rounded-lg text-xs font-bold text-on-surface-variant hover:text-white transition-colors';
+        }
+    };
+
+    function showAuthError(msg) {
+        const el = document.getElementById('auth-error');
+        if (el) { el.textContent = msg; el.classList.remove('hidden'); }
+    }
+
+    function showAuthOverlay() {
+        const overlay = document.getElementById('auth-overlay');
+        if (overlay) overlay.style.display = 'flex';
+    }
+
+    function hideAuthOverlay() {
+        const overlay = document.getElementById('auth-overlay');
+        if (overlay) overlay.style.display = 'none';
+    }
+
+    // ─── Profile Menu Toggle ─────────────────────────────────────────────
+    window.toggleProfileMenu = function() {
+        const menu = document.getElementById('profile-dropdown');
+        if (!menu) return;
+        
+        if (menu.classList.contains('opacity-0')) {
+            menu.classList.remove('opacity-0', 'invisible');
+            menu.classList.add('opacity-100', 'visible');
+        } else {
+            menu.classList.add('opacity-0', 'invisible');
+            menu.classList.remove('opacity-100', 'visible');
+        }
+    };
+
+    // Close profile menu when clicking outside
+    document.addEventListener('click', function(e) {
+        const menu = document.getElementById('profile-dropdown');
+        const btn = document.getElementById('btn-profile-menu');
+        if (menu && btn && !menu.contains(e.target) && !btn.contains(e.target)) {
+            menu.classList.add('opacity-0', 'invisible');
+            menu.classList.remove('opacity-100', 'visible');
+        }
+    });
+
+    // ─── Enter Key Support ───────────────────────────────────────────────
+    document.addEventListener('keydown', function(e) {
+        if (e.key !== 'Enter') return;
+        const overlay = document.getElementById('auth-overlay');
+        if (!overlay || overlay.style.display === 'none') return;
+
+        const loginForm = document.getElementById('auth-form-login');
+        if (loginForm && !loginForm.classList.contains('hidden')) {
+            window.handleLogin();
+        } else {
+            window.handleRegister();
+        }
+    });
+
+    // ─── Login Handler ──────────────────────────────────────────────────
+    window.handleLogin = async function() {
+        const username = document.getElementById('login-username').value.trim();
+        const password = document.getElementById('login-password').value.trim();
+
+        if (!username || !password) { showAuthError('Kullanıcı adı ve şifre zorunludur.'); return; }
+
+        const btn = document.getElementById('btn-login');
+        btn.disabled = true; btn.textContent = 'Giriş yapılıyor...';
+
+        try {
+            const resp = await fetch(API_BASE + '/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify({ username, password })
+            });
+            const data = await resp.json();
+
+            if (!resp.ok) {
+                showAuthError(data.error || 'Giriş başarısız.');
+                return;
+            }
+
+            currentUser = data.user;
+            const profileMenuEl = document.getElementById('profile-menu-username');
+            if (profileMenuEl) profileMenuEl.textContent = currentUser.username;
+            updateHeaderProfileAvatar();
+            hideAuthOverlay();
+            await loadUserPredictions();
+            await loadComments();
+        } catch (err) {
+            showAuthError('Sunucuya bağlanılamadı. Backend çalışıyor mu?');
+        } finally {
+            btn.disabled = false;
+            btn.innerHTML = '<span class="material-symbols-outlined text-lg">login</span> Giriş Yap';
+        }
+    };
+
+    // ─── Register Handler ───────────────────────────────────────────────
+    window.handleRegister = async function() {
+        const username = document.getElementById('register-username').value.trim();
+        const password = document.getElementById('register-password').value.trim();
+
+        if (!username || !password) { showAuthError('Kullanıcı adı ve şifre zorunludur.'); return; }
+        if (username.length < 3 || username.length > 20) { showAuthError('Kullanıcı adı 3-20 karakter arasında olmalıdır.'); return; }
+        if (password.length < 6) { showAuthError('Şifre en az 6 karakter olmalıdır.'); return; }
+
+        const btn = document.getElementById('btn-register');
+        btn.disabled = true; btn.textContent = 'Kayıt oluşturuluyor...';
+
+        try {
+            const resp = await fetch(API_BASE + '/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify({ username, password, turnstile_token: '' })
+            });
+            const data = await resp.json();
+
+            if (!resp.ok) {
+                showAuthError(data.error || 'Kayıt başarısız.');
+                return;
+            }
+
+            currentUser = data.user;
+            const profileMenuEl = document.getElementById('profile-menu-username');
+            if (profileMenuEl) profileMenuEl.textContent = currentUser.username;
+            updateHeaderProfileAvatar();
+            hideAuthOverlay();
+            await loadUserPredictions();
+        } catch (err) {
+            showAuthError('Sunucuya bağlanılamadı. Backend çalışıyor mu?');
+        } finally {
+            btn.disabled = false;
+            btn.innerHTML = '<span class="material-symbols-outlined text-lg">person_add</span> Kayıt Ol';
+        }
+    };
+
+    // ─── Logout Handler ─────────────────────────────────────────────────
+    window.handleLogout = async function() {
+        try {
+            await fetch(API_BASE + '/logout', { method: 'POST', credentials: 'include' });
+        } catch (e) {}
+        currentUser = null;
+        currentUserPredictions = {};
+        updateHeaderProfileAvatar();
+        showAuthOverlay();
+    };
+
+    // ─── Load Predictions from Backend ──────────────────────────────────
+    async function loadUserPredictions() {
+        try {
+            const resp = await fetch(API_BASE + '/predictions', { credentials: 'include' });
+            if (resp.ok) {
+                const data = await resp.json();
+                currentUserPredictions = data;
+                localStorage.setItem('user_predictions', JSON.stringify(data));
+                renderAllMatches();
+                renderHomeDashboard();
+                updateForumPlayedSelect();
+            }
+        } catch (e) {}
+    }
+
+    // ─── Load Comments from Backend ─────────────────────────────────────
+    async function loadComments() {
+        try {
+            const resp = await fetch(API_BASE + '/comments', { credentials: 'include' });
+            if (resp.ok) {
+                const data = await resp.json();
+                forumComments = data;
+                renderForumTab();
+            }
+        } catch (e) {}
+    }
+
+    // ─── Override savePrediction to also sync with backend ──────────────
+    const _origSavePrediction = window.savePrediction;
+    window.savePrediction = async function(matchId) {
+        // Call original local save logic
+        if (typeof _origSavePrediction === 'function') {
+            _origSavePrediction(matchId);
+        }
+
+        // Sync to backend
+        const pred = currentUserPredictions[matchId];
+        if (pred && pred.saved) {
+            try {
+                await fetch(API_BASE + '/predictions', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({
+                        match_id: matchId,
+                        choice: pred.choice,
+                        diff: pred.diff,
+                        label_text: pred.labelText,
+                        predicted_difference: pred.predicted_difference,
+                        predicted_home_score: pred.predicted_home_score,
+                        predicted_away_score: pred.predicted_away_score,
+                        is_totem: pred.is_totem ? 1 : 0
+                    })
+                });
+            } catch (e) {}
+        }
+    };
+
+    // ─── Override submitUserComment to also sync with backend ────────────
+    const _origSubmitComment = window.submitUserComment;
+    window.submitUserComment = async function() {
+        const textarea = document.getElementById("forum-comment-textarea");
+        const selectEl = document.getElementById("forum-played-match-select");
+
+        if (!selectEl || !selectEl.value) {
+            alert("Lütfen yorum yazmak için bir maç seçin!");
+            return;
+        }
+        if (!textarea || !textarea.value.trim()) {
+            alert("Lütfen analiz içeriğini boş bırakmayın!");
+            return;
+        }
+
+        const matchId = selectEl.value;
+        const match = matchesData.find(m => m.id === matchId);
+        const selectedOption = selectEl.options[selectEl.selectedIndex];
+        const predictText = selectedOption.getAttribute("data-predict") || "";
+        const matchName = match ? `${match.homeTeam} vs ${match.awayTeam}` : 'Karşılaşma';
+        const commentText = textarea.value.trim();
+
+        // Call original local logic
+        if (typeof _origSubmitComment === 'function') {
+            _origSubmitComment();
+        }
+
+        // Sync to backend
+        try {
+            await fetch(API_BASE + '/comments', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify({
+                    match_id: matchId,
+                    match_name: matchName,
+                    predict: predictText,
+                    comment: commentText
+                })
+            });
+        } catch (e) {}
+    };
+
+    // ─── Session Check on Page Load ─────────────────────────────────────
+    async function checkSession() {
+        // İlk olarak maçları yükle (herkese açık)
+        await loadMatchesFromBackend();
+        await loadLeaderboardFromBackend();
+
+        try {
+            const resp = await fetch(API_BASE + '/me', { credentials: 'include' });
+            const data = await resp.json();
+
+            if (data.authenticated) {
+                currentUser = data.user;
+                const profileMenuEl = document.getElementById('profile-menu-username');
+                if (profileMenuEl) profileMenuEl.textContent = currentUser.username;
+                updateHeaderProfileAvatar();
+                hideAuthOverlay();
+                await loadUserPredictions();
+                await loadComments();
+            } else {
+                showAuthOverlay();
+            }
+        } catch (e) {
+            // Backend çalışmıyorsa overlay gösterme, offline kullanıma izin ver
+            console.warn('Backend bağlantısı kurulamadı. Çevrimdışı mod.');
+        }
+    }
+
+    // Sayfa yüklendiğinde oturumu kontrol et
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', checkSession);
+    } else {
+        checkSession();
+    }
+})();
+</script>
+
+</body></html>
+
