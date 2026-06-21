@@ -1401,6 +1401,10 @@
             const hasPrediction = pred && pred.saved;
             const predText = hasPrediction ? pred.labelText : '';
             
+            // Find current user's comment/analysis for this match
+            const myCommentObj = (typeof forumComments !== 'undefined' ? forumComments : []).find(c => String(c.matchId) === String(match.id) && c.userName === (currentUser ? currentUser.username : ''));
+            const matchAnalysisText = myCommentObj ? myCommentObj.comment : '';
+            
             let timeOrStatus = `<span class="text-sm font-semibold text-white">${match.time}</span>`;
             let statusTag = '';
             let middleScore = 'VS';
@@ -1425,7 +1429,8 @@
                           <span class="text-xs font-bold text-white">Senin Analizin</span>
                           ${hasPrediction ? `<span class="text-[10px] text-secondary bg-secondary/10 px-1.5 py-0.5 rounded border border-secondary/20">✓ Yorum Kilidi Açıldı</span>` : ''}
                         </div>
-                        <p class="text-[11px] text-on-surface-variant">${match.analysisText || 'Bu maç için henüz analiz yazılmamış. Forum sekmesinden analizinizi ekleyebilirsiniz.'}</p>
+                        ${hasPrediction ? `<p class="text-xs text-secondary font-semibold mb-2">Yaptığın Tahmin: <span class="text-white">${predText}</span></p>` : ''}
+                        <p class="text-[11px] text-on-surface-variant">${matchAnalysisText || 'Bu maç için henüz analiz yazılmamış. Forum sekmesinden analizinizi ekleyebilirsiniz.'}</p>
                       </div>
                     </div>`;
 
@@ -2232,6 +2237,7 @@
                 const data = await resp.json();
                 forumComments = data;
                 renderForumTab();
+                renderAllMatches();
             }
         } catch (e) {}
     }
