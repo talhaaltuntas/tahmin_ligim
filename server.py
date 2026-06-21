@@ -581,7 +581,7 @@ def get_leaderboard():
         else:
             multiplier = p['away_odds'] or 1.0
             
-        normal_diff_points = int(3 * multiplier)
+        normal_diff_points = round(3 * multiplier, 2)
         points_earned = 0
         is_win = False
         
@@ -615,6 +615,7 @@ def get_leaderboard():
             
     for uid in user_points:
         up = user_points[uid]
+        up['points'] = round(up['points'], 2)
         if up['predictions'] > 0:
             up['accuracy'] = int((up['wins'] / up['predictions']) * 100)
             
