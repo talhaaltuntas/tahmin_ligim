@@ -120,6 +120,11 @@ def init_db():
             key         TEXT PRIMARY KEY,
             value       TEXT NOT NULL
         );
+
+        CREATE TABLE IF NOT EXISTS match_sync_state (
+            fixture_id  INTEGER PRIMARY KEY,
+            sleep_until TEXT
+        );
     """)
     # Ensure avatar column exists for older databases
     try:
@@ -200,150 +205,157 @@ def seed_world_cup_matches(db):
 # ─── API-Football Background Worker ───────────────────────────────────────────
 API_KEY = "aed9131fa2f16768e0176986c3307409"
 
-def update_matches_from_api():
-    """Daily sync bot with API limit protection. Connects to api-sports.io."""
+def run_cron_sync():
+    """Cron-job compatible sync triggered every 2 minutes externally."""
     try:
-        # Open and fetch metadata, then close DB immediately to avoid locking during API calls
         db = sqlite3.connect(DATABASE)
+        db.row_factory = sqlite3.Row
         db.execute("PRAGMA journal_mode=WAL")
         
-        # Limit control: Only run once per calendar day (UTC+3 Istanbul time)
-        tz = timezone(timedelta(hours=3))
-        today_str = datetime.now(tz).strftime('%Y-%m-%d')
+        # Query all active matches (status != 'finished')
+        active_matches = db.execute("""
+            SELECT fixture_id, home_team, away_team, match_time, status, home_odds, draw_odds, away_odds
+            FROM matches
+            WHERE status != 'finished'
+        """).fetchall()
         
-        cursor = db.execute("SELECT value FROM system_state WHERE key = 'last_api_update'")
-        row = cursor.fetchone()
-        if row and row[0] == today_str:
-            print("[BACKGROUND BOT] Already synced today. Skipping API calls to conserve limit.")
-            db.close()
-            return
-            
-        print("[BACKGROUND BOT] Initializing daily fixture & odds update...")
-        # Get matches in database
-        db_matches = []
-        for m in db.execute("SELECT fixture_id, status FROM matches").fetchall():
-            db_matches.append((m[0], m[1]))
-        db.close()
+        tz = timezone(timedelta(hours=3))
+        now_trt = datetime.now(tz)
         
         headers = {
             "x-apisports-key": API_KEY
         }
         
-        for fid, db_status in db_matches:
+        for m in active_matches:
+            fid = m['fixture_id']
             if str(fid).startswith("999"):
                 continue
-            # 1. Update Fixture Status and Score
-            url_fix = f"https://v3.football.api-sports.io/fixtures?id={fid}"
-            try:
-                resp = requests.get(url_fix, headers=headers, timeout=15)
-                time.sleep(7) # Respect per-minute API limit of 10 requests
-                if resp.ok:
-                    res = resp.json().get("response", [])
-                    if res:
-                        f_data = res[0]
-                        fixture = f_data.get("fixture", {})
-                        goals = f_data.get("goals", {})
-                        
-                        status_short = fixture.get("status", {}).get("short")
-                        status_str = "upcoming"
-                        if status_short in ["FT", "AET", "PEN"]:
-                            status_str = "finished"
-                        elif status_short in ["1H", "2H", "HT", "ET", "P", "LIVE"]:
-                            status_str = "live"
-                            
-                        home_goals = goals.get("home")
-                        away_goals = goals.get("away")
-                        score_str = ""
-                        result_str = ""
-                        
-                        if home_goals is not None and away_goals is not None:
-                            score_str = f"{home_goals} - {away_goals}"
-                            if status_str == "finished":
-                                if home_goals > away_goals:
-                                    result_str = "home"
-                                elif away_goals > home_goals:
-                                    result_str = "away"
-                                else:
-                                    result_str = "draw"
-                                    
-                        # Perform database write in a short-lived connection
-                        temp_db = sqlite3.connect(DATABASE)
-                        temp_db.execute("PRAGMA journal_mode=WAL")
-                        temp_db.execute("""
-                            UPDATE matches
-                            SET status = ?, score = ?, result = ?
-                            WHERE fixture_id = ?
-                        """, (status_str, score_str, result_str, fid))
-                        temp_db.commit()
-                        temp_db.close()
-                        print(f"[BACKGROUND BOT] Updated fixture {fid}: status={status_str}, score={score_str}")
-                    else:
-                        print(f"[BACKGROUND BOT] No fixture data returned for ID {fid}")
-                else:
-                    print(f"[BACKGROUND BOT] API Error on fixture {fid}: {resp.status_code} - {resp.text}")
-            except Exception as e:
-                print(f"[BACKGROUND BOT] Exception updating fixture {fid}: {e}")
                 
-            # 2. Update Odds (if not finished)
-            if db_status != "finished":
-                url_odds = f"https://v3.football.api-sports.io/odds?fixture={fid}"
+            # Parse kickoff time
+            try:
+                match_dt = datetime.strptime(m['match_time'], '%Y-%m-%d %H:%M').replace(tzinfo=tz)
+            except Exception as e:
+                print(f"[CRON SYNC] Error parsing match time for {fid}: {e}")
+                continue
+                
+            diff_minutes = (now_trt - match_dt).total_seconds() / 60
+            
+            # Rule 1 & 2: Skip if kickoff was less than 105 minutes ago
+            if diff_minutes < 105:
+                continue
+                
+            # Rule 3: Kickoff was >= 105 minutes ago, check smart sleeping status
+            cursor = db.execute("SELECT sleep_until FROM match_sync_state WHERE fixture_id = ?", (fid,))
+            row = cursor.fetchone()
+            if row and row[0]:
                 try:
-                    resp = requests.get(url_odds, headers=headers, timeout=15)
-                    time.sleep(7) # Respect per-minute API limit of 10 requests
-                    if resp.ok:
-                        res = resp.json().get("response", [])
-                        if res:
-                            bookmakers = res[0].get("bookmakers", [])
-                            home_odds = 1.0
-                            draw_odds = 1.0
-                            away_odds = 1.0
-                            found_odds = False
-                            
-                            for bm in bookmakers:
-                                for bet in bm.get("bets", []):
-                                    if bet.get("name") == "Match Winner":
-                                        for val in bet.get("values", []):
-                                            odd_val = float(val.get("odd", 1.0))
-                                            if val.get("value") == "Home":
-                                                home_odds = odd_val
-                                            elif val.get("value") == "Draw":
-                                                draw_odds = odd_val
-                                            elif val.get("value") == "Away":
-                                                away_odds = odd_val
-                                        found_odds = True
-                                        break
-                                if found_odds:
-                                    break
-                                    
-                            # Perform database write in a short-lived connection
-                            temp_db = sqlite3.connect(DATABASE)
-                            temp_db.execute("PRAGMA journal_mode=WAL")
-                            temp_db.execute("""
-                                UPDATE matches
-                                SET home_odds = ?, draw_odds = ?, away_odds = ?
-                                WHERE fixture_id = ?
-                            """, (home_odds, draw_odds, away_odds, fid))
-                            temp_db.commit()
-                            temp_db.close()
-                            print(f"[BACKGROUND BOT] Updated odds for fixture {fid}: home={home_odds}, draw={draw_odds}, away={away_odds}")
-                        else:
-                            print(f"[BACKGROUND BOT] No odds data returned for ID {fid}")
-                    else:
-                        print(f"[BACKGROUND BOT] API Error on odds {fid}: {resp.status_code} - {resp.text}")
+                    sleep_until_dt = datetime.fromisoformat(row[0]).replace(tzinfo=tz)
+                    if now_trt < sleep_until_dt:
+                        print(f"[CRON SYNC] Fixture {fid} is sleeping until {row[0]}. Skipping API request.")
+                        continue
                 except Exception as e:
-                    print(f"[BACKGROUND BOT] Exception updating odds {fid}: {e}")
+                    print(f"[CRON SYNC] Error parsing sleep_until for {fid}: {e}")
                     
-        # Update run timestamp in a short-lived connection
-        temp_db = sqlite3.connect(DATABASE)
-        temp_db.execute("PRAGMA journal_mode=WAL")
-        temp_db.execute("INSERT OR REPLACE INTO system_state (key, value) VALUES ('last_api_update', ?)", (today_str,))
-        temp_db.commit()
-        temp_db.close()
-        print("[BACKGROUND BOT] Finished daily fixture and odds synchronization.")
+            # Not sleeping or sleep expired, make API request
+            print(f"[CRON SYNC] Querying API for fixture {fid} ({m['home_team']} vs {m['away_team']})...")
+            url = f"https://v3.football.api-sports.io/fixtures?id={fid}"
+            try:
+                resp = requests.get(url, headers=headers, timeout=15)
+                # Sleep 3 seconds to avoid hit limit of 10 requests per minute if multiple matches check
+                time.sleep(3)
+                if not resp.ok:
+                    print(f"[CRON SYNC] API error for {fid}: {resp.status_code}")
+                    continue
+                    
+                res = resp.json().get("response", [])
+                if not res:
+                    print(f"[CRON SYNC] Empty response for {fid}")
+                    continue
+                    
+                f_data = res[0]
+                fixture = f_data.get("fixture", {})
+                goals = f_data.get("goals", {})
+                status_short = fixture.get("status", {}).get("short")
+                
+                # Rule 4: Smart Sleeping logic based on status_short
+                if status_short in ['1H', 'HT', '2H', 'BT', 'LIVE', 'SUSP', 'INT', 'NS']:
+                    # Live / Normal time: continue checking every 2 mins (no sleep)
+                    print(f"[CRON SYNC] Fixture {fid} is currently {status_short}. Will check again in 2 mins.")
+                    if status_short != 'NS' and m['status'] != 'live':
+                        db.execute("UPDATE matches SET status = 'live' WHERE fixture_id = ?", (fid,))
+                        db.commit()
+                        
+                elif status_short == 'ET':
+                    # Extra Time: sleep for 35 mins
+                    sleep_until = now_trt + timedelta(minutes=35)
+                    db.execute("""
+                        INSERT OR REPLACE INTO match_sync_state (fixture_id, sleep_until)
+                        VALUES (?, ?)
+                    """, (fid, sleep_until.isoformat()))
+                    db.commit()
+                    print(f"[CRON SYNC] Fixture {fid} entered Extra Time (ET). Sleeping for 35 minutes.")
+                    
+                elif status_short == 'P':
+                    # Penalty Shootout: sleep for 12 mins
+                    sleep_until = now_trt + timedelta(minutes=12)
+                    db.execute("""
+                        INSERT OR REPLACE INTO match_sync_state (fixture_id, sleep_until)
+                        VALUES (?, ?)
+                    """, (fid, sleep_until.isoformat()))
+                    db.commit()
+                    print(f"[CRON SYNC] Fixture {fid} entered Penalty Shootout (P). Sleeping for 12 minutes.")
+                    
+                elif status_short in ['FT', 'AET', 'PEN', 'AWD', 'WO']:
+                    # Finished! Save score, result, and set status='finished'
+                    home_goals = goals.get("home")
+                    away_goals = goals.get("away")
+                    score_str = ""
+                    result_str = ""
+                    
+                    if home_goals is not None and away_goals is not None:
+                        score_str = f"{home_goals} - {away_goals}"
+                        if home_goals > away_goals:
+                            result_str = "home"
+                        elif away_goals > home_goals:
+                            result_str = "away"
+                        else:
+                            result_str = "draw"
+                    else:
+                        score_str = "0 - 0"
+                        result_str = "draw"
+                        
+                    db.execute("""
+                        UPDATE matches
+                        SET status = 'finished', score = ?, result = ?
+                        WHERE fixture_id = ?
+                    """, (score_str, result_str, fid))
+                    # Delete sleep state since it's finished
+                    db.execute("DELETE FROM match_sync_state WHERE fixture_id = ?", (fid,))
+                    db.commit()
+                    print(f"[CRON SYNC] Fixture {fid} has finished. Score: {score_str}. Finalized predictions.")
+                    
+                else:
+                    # Other status (e.g. PST, CANC)
+                    print(f"[CRON SYNC] Fixture {fid} has unhandled status: {status_short}")
+                    
+            except Exception as e:
+                print(f"[CRON SYNC] Exception processing fixture {fid}: {e}")
+                
+        db.close()
     except Exception as e:
-        print(f"[BACKGROUND BOT] General error in sync bot: {e}")
-    except Exception as e:
-        print(f"[BACKGROUND BOT] General error in sync bot: {e}")
+        print(f"[CRON SYNC] Database connection error: {e}")
+
+
+@app.route('/api/cron/sync', methods=['GET', 'POST'])
+def trigger_cron_sync():
+    """Trigger the cron sync process in a background thread."""
+    token = request.args.get('token')
+    expected_token = os.environ.get('CRON_TOKEN', 'tahminligim_cron_token_123')
+    if token != expected_token:
+        return jsonify({'error': 'Unauthorized'}), 401
+        
+    threading.Thread(target=run_cron_sync).start()
+    return jsonify({'message': 'Cron sync triggered successfully.'}), 200
 
 
 # ─── Auth Decorator ──────────────────────────────────────────────────────────
@@ -778,8 +790,6 @@ def ratelimit_handler(e):
 
 # ─── Initialization (Runs under Gunicorn and Development Server) ───────────────
 init_db()
-# Start the daily background API sync thread
-threading.Thread(target=update_matches_from_api, daemon=True).start()
 
 
 # ─── Main ─────────────────────────────────────────────────────────────────────
